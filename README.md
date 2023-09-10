@@ -1,6 +1,7 @@
 # Kpop Chat
 
-Mobile app that connects user with virtual friends to chat about Kpop related stuffs and share common interests.
+To say: Mobile app that connects user with virtual friends to chat about Kpop related stuffs and share common interests.
+Basically: Just another useless piece of crap to push to GooglePlay and pull some ad revenue using popular Google Trends Topic. Thanks to Googly Googly
 
 ##### Used services:
 
@@ -21,5 +22,4 @@ Initial screenshots of the app below:
 ![Sign In Screen](/app_screenshots/sign_in_screen.png "SS1")
 ![Initial Dashboard](/app_screenshots/initial_dashboard.png "SS1")
 
-For any purposes: hi@ghimireprashant.com.np
 Thank you, Danke, Bis balt, Alles gut
