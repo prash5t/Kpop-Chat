@@ -5,6 +5,7 @@ import 'package:kpopchat/data/models/virtual_friend_model.dart';
 import 'package:kpopchat/presentation/common_widgets/cached_circle_avatar.dart';
 import 'package:kpopchat/presentation/common_widgets/common_widgets.dart';
 import 'package:kpopchat/presentation/common_widgets/custom_text.dart';
+import 'package:kpopchat/presentation/widgets/chat_screen_widgets/online_status_widger.dart';
 
 PreferredSize chatScreenAppBar(
     BuildContext context, VirtualFriendModel virtualFriend) {
@@ -29,11 +30,19 @@ PreferredSize chatScreenAppBar(
             child: Row(children: [
               CachedCircleAvatar(imageUrl: imageUrl),
               SizedBox(width: 20.w),
-              CustomText(
-                text: "${virtualFriend.name}",
-                isBold: true,
-                size: 20.sp,
-                textColor: Theme.of(context).primaryColor,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomText(
+                    text: "${virtualFriend.name}",
+                    isBold: true,
+                    size: 20.sp,
+                    textColor: Theme.of(context).primaryColor,
+                  ),
+                  SizedBox(height: 1.h),
+                  const OnlineStatusWidget()
+                ],
               )
             ]),
           ),
