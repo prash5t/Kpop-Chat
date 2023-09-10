@@ -17,6 +17,7 @@ class ChatCubit extends Cubit<ChatState> {
 
   UserModel? loggedInUser = SharedPrefsHelper.getUserProfile();
 
+  Map<String, dynamic> chatScreenOpen = {};
   void loadChatHistory(VirtualFriendModel virtualFriend) async {
     final Either<List<SchemaMessageModel>, FailureModel> response =
         await chatRepo.getChatWithThisFriend(virtualFriend.id!);

@@ -1,0 +1,42 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kpopchat/data/models/virtual_friend_model.dart';
+import 'package:kpopchat/presentation/common_widgets/cached_circle_avatar.dart';
+import 'package:kpopchat/presentation/common_widgets/common_widgets.dart';
+import 'package:kpopchat/presentation/common_widgets/custom_text.dart';
+
+PreferredSize chatScreenAppBar(
+    BuildContext context, VirtualFriendModel virtualFriend) {
+  final String imageUrl = virtualFriend.displayPictureUrl!;
+
+  return CommonWidgets.customAppBar(
+      context,
+      Row(
+        children: [
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(CupertinoIcons.back)),
+          SizedBox(width: 17.w),
+          GestureDetector(
+            onTap: () {
+              // Navigator.of(context).pushNamed(AppRoutes.botProfileScreen,
+              //     arguments: BotProfileScreenModel(
+              //         schemaBotModel: bot, isChoosingBot: false));
+            },
+            child: Row(children: [
+              CachedCircleAvatar(imageUrl: imageUrl),
+              SizedBox(width: 20.w),
+              CustomText(
+                text: "${virtualFriend.name}",
+                isBold: true,
+                size: 20.sp,
+                textColor: Theme.of(context).primaryColor,
+              )
+            ]),
+          ),
+        ],
+      ));
+}

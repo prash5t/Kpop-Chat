@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kpopchat/core/routes/app_routes.dart';
 import 'package:kpopchat/data/models/virtual_friend_model.dart';
 import 'package:kpopchat/presentation/common_widgets/cached_image_widget.dart';
 import 'package:kpopchat/presentation/common_widgets/custom_text.dart';
@@ -33,7 +34,8 @@ class _VirtualFriendsLoadedScreenState
 
                 return InkWell(
                   onTap: () {
-                    debugPrint("hello");
+                    Navigator.of(context)
+                        .pushNamed(AppRoutes.chatScreen, arguments: friendData);
                   },
                   child: Center(
                     child: Padding(

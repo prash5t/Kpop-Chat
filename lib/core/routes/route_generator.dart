@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
+import 'package:kpopchat/data/models/virtual_friend_model.dart';
 import 'package:kpopchat/presentation/screens/auth_checker_screen.dart';
+import 'package:kpopchat/presentation/screens/chat_screen/chat_screen.dart';
 import 'package:kpopchat/presentation/screens/menu_screen.dart';
 import 'package:kpopchat/presentation/screens/sign_in_screen.dart';
 import 'package:kpopchat/presentation/screens/virtual_friends_list/virtual_friends_list_screen.dart';
 import 'app_routes.dart';
 
 Route<dynamic> onGenerateRoute(RouteSettings settings) {
-  // Object? argument = settings.arguments;
+  Object? argument = settings.arguments;
   switch (settings.name) {
     case AppRoutes.authCheckerScreen:
       return CupertinoPageRoute(
@@ -18,6 +20,10 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
           builder: (context) => const VirtualFriendsListScreen());
     case AppRoutes.menuScreen:
       return pageRouteBuilder(screen: const MenuScreen());
+    case AppRoutes.chatScreen:
+      return CupertinoPageRoute(
+          builder: (context) =>
+              ChatScreen(virtualFriend: argument as VirtualFriendModel));
     default:
       return CupertinoPageRoute(builder: (context) => const SignInScreen());
   }
