@@ -9,4 +9,17 @@ Mobile app that connects user with virtual friends to chat about Kpop related st
 - Adobe Firefly for virtual friend's image generation.
 - Cloud Firestore (For saving user profile related information)
 
-Note: The term 'virtual friend' here refers to a bot.
+##### Todo tasks:
+
+- Messaging Interface
+- OpenAI integration
+- Google Admobs
+- Publish to GooglePlay
+  Note: The term 'virtual friend' here refers to a bot.
+
+Initial screenshots of the app below:
+![Sign In Screen](/app_screenshots/sign_in_screen.png "SS1")
+![Initial Dashboard](/app_screenshots/initial_dashboard.png "SS1")
+
+For any purposes: hi@ghimireprashant.com.np
+Thank you, Danke, Bis balt, Alles gut
