@@ -15,6 +15,15 @@ class UserModel {
   static const String kIsAnonymous = "isAnonymous";
   static const String kPhotoURL = "photoURL";
 
+  UserModel.fromJson(Map<String, dynamic> json) {
+    userId = json[kUid];
+    displayName = json[kDisplayName];
+    email = json[kEmail];
+    emailVerified = json[kEmailVerified];
+    isAnonymous = json[kIsAnonymous];
+    photoURL = json[kPhotoURL];
+  }
+
   UserModel.fromFirebaseCurrentUser(User currentUser) {
     userId = currentUser.uid;
     displayName = currentUser.displayName;

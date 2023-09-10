@@ -14,18 +14,17 @@ class ErrorReceivingBotMsgState extends ChatState {
 }
 
 class ChatLoadedState extends ChatState {
-  List<ChatMessage> conversationHistory;
+  List<ChatMessage> chatHistory;
   String virtualFriendId;
-  ChatLoadedState(
-      {required this.conversationHistory, required this.virtualFriendId});
+  ChatLoadedState({required this.chatHistory, required this.virtualFriendId});
 }
 
-class BotTypingState extends ChatState {
-  List<ChatMessage> conversationHistory;
+class FriendTypingState extends ChatState {
+  List<ChatMessage> chatHistory;
   List<ChatUser> typingUsers;
   String virtualFriendId;
-  BotTypingState(
-      {required this.conversationHistory,
+  FriendTypingState(
+      {required this.chatHistory,
       required this.typingUsers,
       required this.virtualFriendId});
 }
