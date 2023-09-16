@@ -12,8 +12,6 @@ Basically: Just another useless piece of crap to push to GooglePlay and pull som
 
 ##### Todo tasks:
 
-- Messaging Interface
-- OpenAI integration
 - Google Admobs
 - Publish to GooglePlay
   Note: The term 'virtual friend' here refers to a bot.
