@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kpopchat/core/constants/firestore_collections_constants.dart';
+import 'package:kpopchat/core/utils/analytics.dart';
 import 'package:kpopchat/core/utils/service_locator.dart';
 import 'package:kpopchat/core/utils/shared_preferences_helper.dart';
 import 'package:kpopchat/data/models/user_model.dart';
@@ -35,7 +36,7 @@ class AuthRepoImplementation implements AuthRepo {
 
       User? loggedInUser = googleUserCredential.user;
       SharedPrefsHelper.saveUserProfile(loggedInUser);
-
+      setUserIdInAnalytics(SharedPrefsHelper.getUserProfile());
       final bool isNewUser =
           googleUserCredential.additionalUserInfo?.isNewUser ?? true;
       if (isNewUser) {

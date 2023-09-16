@@ -38,7 +38,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     VirtualFriendModel virtualFriend = widget.virtualFriend;
     ChatUser loggedInUser =
-        ChatUser(id: SharedPrefsHelper.getUserProfile()!.userId!);
+        ChatUser(id: SharedPrefsHelper.getUserProfile()?.userId ?? "");
     return Scaffold(
       appBar: chatScreenAppBar(context, virtualFriend),
       body: BlocBuilder<ChatCubit, ChatState>(

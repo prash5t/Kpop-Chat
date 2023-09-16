@@ -4,13 +4,13 @@ import 'package:kpopchat/core/utils/shared_preferences_helper.dart';
 
 class SchemaMessageModel {
   String? role;
-  String? content;
+  String? message;
   String? createdAt;
   bool? botReplied;
   SchemaMessageModel(
-      {this.role, this.content, this.createdAt, this.botReplied});
+      {this.role, this.message, this.createdAt, this.botReplied});
   static const String kKeyRole = "role";
-  static const String kKeyContent = "content";
+  static const String kKeyMsg = "message";
   static const String kKeyCreatedAt = "createdAt";
   static const String kKeyFollowUpTime = "followupTime";
   static const String kKeybotReplied = "reply";
@@ -18,17 +18,17 @@ class SchemaMessageModel {
   /// msg can be from three entity which are (system, assistant and user)
   /// so below static constats are kept
   static const String kKeySystemRole = "system";
-  static const String kKeyVirtualFriendRole = "virtual_friend";
+  static const String kKeyVirtualFriendRole = "assistant";
   static const String kKeyUserRole = "user";
 
   SchemaMessageModel.fromJson(Map<String, dynamic> json) {
     role = json[kKeyRole];
-    content = json[kKeyContent];
+    message = json[kKeyMsg];
     createdAt = json[kKeyCreatedAt];
     botReplied = json[kKeybotReplied];
   }
   Map<String, dynamic> toJson() {
-    return {kKeyRole: role, kKeyContent: content, kKeyCreatedAt: createdAt};
+    return {kKeyRole: role, kKeyMsg: message, kKeyCreatedAt: createdAt};
   }
 
   SchemaMessageModel.fromChatMessage(ChatMessage msg) {
@@ -38,13 +38,13 @@ class SchemaMessageModel {
     role = msgIsByUser
         ? SchemaMessageModel.kKeyUserRole
         : SchemaMessageModel.kKeyVirtualFriendRole;
-    content = msg.text;
+    message = msg.text;
     createdAt = msg.createdAt.toString();
   }
 
   ChatMessage toChatMessage(ChatUser msgSender) {
     return ChatMessage(
-        text: content ?? "",
+        text: message ?? "",
         user: msgSender,
         createdAt: DateTime.parse(createdAt!).toLocal());
   }

@@ -4,7 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kpopchat/business_logic/chat_cubit/chat_cubit.dart';
 import 'package:kpopchat/business_logic/internet_checker_cubit.dart';
+import 'package:kpopchat/core/constants/analytics_constants.dart';
 import 'package:kpopchat/core/constants/text_constants.dart';
+import 'package:kpopchat/core/utils/analytics.dart';
 import 'package:kpopchat/data/models/virtual_friend_model.dart';
 import 'package:kpopchat/main.dart';
 import 'package:kpopchat/presentation/common_widgets/common_widgets.dart';
@@ -61,6 +63,7 @@ class _ChatLoadedScreenState extends State<ChatLoadedScreen> {
           // }
         ),
         currentUser: widget.loggedInUser,
+        typingUsers: widget.typingUsers,
         messageOptions: chatbotMessageOptionsBuilder(
             context, widget.virtualFriendInfo, widget.loggedInUser),
         onSend: (ChatMessage userNewMsg) async {
@@ -69,11 +72,12 @@ class _ChatLoadedScreenState extends State<ChatLoadedScreen> {
                 await BlocProvider.of<InternetConnectivityCubit>(context)
                     .isInternetConnected();
             if (internetAvailable) {
+              increasePropertyCount(AnalyticsConstants.kProperyMsgSentCount, 1);
               BlocProvider.of<ChatCubit>(navigatorKey.currentContext!)
                   .sendNewMsgToFriend(userNewMsg, widget.virtualFriendInfo);
             } else {
               CommonWidgets.customFlushBar(
-                  navigatorKey.currentContext!, TextConstants.appName);
+                  navigatorKey.currentContext!, TextConstants.noInternetMsg);
             }
           }
         },

@@ -46,4 +46,12 @@ class SchemaVirtualFriendModel {
     }
     return listOfChatMessages;
   }
+
+  List<Map<String, dynamic>> toListOfJsonMessages() {
+    List<Map<String, dynamic>> listOfMessages = [];
+    for (SchemaMessageModel eachMsg in chatHistory!) {
+      listOfMessages.add(eachMsg.toJson());
+    }
+    return listOfMessages;
+  }
 }

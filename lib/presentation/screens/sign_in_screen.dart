@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kpopchat/core/constants/analytics_constants.dart';
+import 'package:kpopchat/core/utils/analytics.dart';
 import 'package:kpopchat/presentation/common_widgets/common_decorations.dart';
 import 'package:kpopchat/presentation/common_widgets/common_widgets.dart';
 import 'package:kpopchat/presentation/common_widgets/custom_text.dart';
@@ -34,6 +36,7 @@ class _SignInScreenState extends State<SignInScreen> {
   void initState() {
     _policyRecognizer = TapGestureRecognizer()
       ..onTap = () {
+        logEventInAnalytics(AnalyticsConstants.kEventPolicyClicked);
         _launchUrl(NetworkConstants.policyUrl);
       };
     super.initState();
@@ -94,10 +97,13 @@ class _SignInScreenState extends State<SignInScreen> {
                 const WelcomeText(),
                 const PleaseLoginText(),
                 SignInWithGoogleBtn(onTap: () async {
+                  logEventInAnalytics(AnalyticsConstants.kEventSignInClick);
                   setState(() {
                     isLoading = true;
                   });
                   if (await locator<AuthRepo>().signInWithGoogle()) {
+                    // sign in success
+                    logEventInAnalytics(AnalyticsConstants.kEventSignedIn);
                     Navigator.of(navigatorKey.currentContext!)
                         .pushNamedAndRemoveUntil(
                             AppRoutes.virtualFriendsListScreen,

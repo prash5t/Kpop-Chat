@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kpopchat/core/constants/analytics_constants.dart';
 import 'package:kpopchat/core/constants/text_constants.dart';
 import 'package:kpopchat/core/routes/app_routes.dart';
+import 'package:kpopchat/core/utils/analytics.dart';
 import 'package:kpopchat/presentation/common_widgets/common_widgets.dart';
 import 'package:kpopchat/presentation/common_widgets/custom_text.dart';
 
@@ -32,6 +34,7 @@ PreferredSize conversationsScreenAppBar(BuildContext context) {
 IconButton buildMenuButton(BuildContext context) {
   return IconButton(
       onPressed: () {
+        logEventInAnalytics(AnalyticsConstants.kEventMenuScreenClicked);
         Navigator.pushNamed(context, AppRoutes.menuScreen);
       },
       icon: Icon(

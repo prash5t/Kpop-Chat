@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kpopchat/business_logic/auth_checker_cubit/auth_checker_cubit.dart';
 import 'package:kpopchat/business_logic/theme_cubit.dart';
+import 'package:kpopchat/core/constants/analytics_constants.dart';
 import 'package:kpopchat/core/constants/text_constants.dart';
 import 'package:kpopchat/core/themes/dark_theme.dart';
+import 'package:kpopchat/core/utils/analytics.dart';
 import 'package:kpopchat/main.dart';
 import 'package:kpopchat/presentation/common_widgets/bool_bottom_sheet.dart';
 import 'package:kpopchat/presentation/common_widgets/common_widgets.dart';
@@ -73,6 +75,7 @@ class _MenuScreenState extends State<MenuScreen> {
             boolTrueText: TextConstants.logoutText) ??
         false;
     if (shouldLogout) {
+      logEventInAnalytics(AnalyticsConstants.kEventSignOut);
       BlocProvider.of<AuthCheckerCubit>(navigatorKey.currentContext!)
           .signOutUser();
     }

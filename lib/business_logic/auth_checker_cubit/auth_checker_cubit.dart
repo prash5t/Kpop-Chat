@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kpopchat/business_logic/virtual_friends_cubit/virtual_friends_list_cubit.dart';
 import 'package:kpopchat/core/routes/app_routes.dart';
@@ -27,6 +28,7 @@ class AuthCheckerCubit extends Cubit<AuthStates> {
   /// Sign out from google and navigate to sign in screen
   void signOutUser() async {
     SharedPrefsHelper.clearAll();
+    locator<FlutterSecureStorage>().deleteAll();
     await googleSignIn.disconnect();
     await googleSignIn.signOut();
     await firebaseAuth.signOut();

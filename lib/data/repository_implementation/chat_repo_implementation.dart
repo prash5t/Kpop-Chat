@@ -1,17 +1,26 @@
 import 'package:dartz/dartz.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/foundation.dart';
+import 'package:kpopchat/core/constants/analytics_constants.dart';
+import 'package:kpopchat/core/constants/network_constants.dart';
+import 'package:kpopchat/core/constants/prompt_constants.dart';
+import 'package:kpopchat/core/constants/text_constants.dart';
+import 'package:kpopchat/core/network/client/base_client.dart';
 import 'package:kpopchat/core/network/failure_model.dart';
+import 'package:kpopchat/core/utils/analytics.dart';
 import 'package:kpopchat/core/utils/schema_helper.dart';
+import 'package:kpopchat/core/utils/shared_preferences_helper.dart';
 import 'package:kpopchat/data/models/local_schema_model.dart';
+import 'package:kpopchat/data/models/open_ai_resp_model.dart';
 import 'package:kpopchat/data/models/schema_message_model.dart';
 import 'package:kpopchat/data/models/schema_virtual_friend_model.dart';
 import 'package:kpopchat/data/repository/chat_repo.dart';
 
 class ChatRepoImplementation implements ChatRepo {
   final SchemaHelper schemaHelper;
+  final BaseClient baseClient;
 
-  ChatRepoImplementation(this.schemaHelper);
+  ChatRepoImplementation(this.schemaHelper, this.baseClient);
   @override
   Future<Either<List<SchemaMessageModel>, FailureModel>>
       getChatHistoryWithThisFriend(
@@ -45,6 +54,47 @@ class ChatRepoImplementation implements ChatRepo {
       debugPrint("exception at chat_repo_implementation.dart: ${e.toString()}");
       return Right(
           FailureModel(message: "Could not fetch chat history at the moment."));
+    }
+  }
+
+  @override
+  Future<Either<SchemaMessageModel, FailureModel>> getMsgFromVirtualFriend(
+      SchemaVirtualFriendModel schemaVirtualFriend) async {
+    Map<String, dynamic>? userInfo =
+        SharedPrefsHelper.getUserProfile()?.toJson();
+    List<Map<String, dynamic>> previousHistory =
+        schemaVirtualFriend.toListOfJsonMessages();
+    Map<String, dynamic> payloadForEdenAI = {
+      "providers": "openai",
+      "text": schemaVirtualFriend.chatHistory?.first.message ?? "Hello",
+      "chatbot_global_action":
+          "${PromptConstants.systemMsg} ${schemaVirtualFriend.info?.toJson()} ${userInfo != null ? "and information of user you are responding to is: $userInfo" : ""}",
+      "previous_history":
+          previousHistory.take(PromptConstants.maxMessagesToTake).toList(),
+      "temperature": PromptConstants.temperature,
+      "max_tokens": PromptConstants.maxTokens
+    };
+    try {
+      final response = await baseClient.postRequest(
+        baseUrl: NetworkConstants.edenAIbaseUrl,
+        path: NetworkConstants.edenAIChatPath,
+        data: payloadForEdenAI,
+      );
+      OpenAIResponseModel friendResp =
+          OpenAIResponseModel.fromJson(response?.data);
+
+      // log credit consumed to mixpanel
+      increasePropertyCount(AnalyticsConstants.kPropertyEdenAiCreditSpent,
+          friendResp.openai?.cost ?? 0);
+      SchemaMessageModel virtualFriendMsg = SchemaMessageModel(
+          role: SchemaMessageModel.kKeyVirtualFriendRole,
+          message: friendResp.openai?.generatedText ?? "Listening...",
+          createdAt: DateTime.now().toString());
+
+      return Left(virtualFriendMsg);
+    } catch (e) {
+      debugPrint("Exception getting eden ai resp: ${e.toString()}");
+      return Right(FailureModel(message: TextConstants.defaultErrorMsg));
     }
   }
 }

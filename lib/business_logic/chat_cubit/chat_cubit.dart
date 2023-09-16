@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kpopchat/core/constants/text_constants.dart';
 import 'package:kpopchat/core/network/failure_model.dart';
 import 'package:kpopchat/core/utils/shared_preferences_helper.dart';
 import 'package:kpopchat/data/models/schema_message_model.dart';
@@ -9,6 +10,8 @@ import 'package:kpopchat/data/models/schema_virtual_friend_model.dart';
 import 'package:kpopchat/data/models/user_model.dart';
 import 'package:kpopchat/data/models/virtual_friend_model.dart';
 import 'package:kpopchat/data/repository/chat_repo.dart';
+import 'package:kpopchat/main.dart';
+import 'package:kpopchat/presentation/common_widgets/common_widgets.dart';
 
 part 'chat_state.dart';
 
@@ -38,9 +41,15 @@ class ChatCubit extends Cubit<ChatState> {
           SchemaVirtualFriendModel(
               info: virtualFriend, chatHistory: chatHistory);
       chatHistoryToEmit = schemaVirtualFriendModel.toListOfChatMessages();
-
-      emit(ChatLoadedState(
-          chatHistory: chatHistoryToEmit, virtualFriendId: virtualFriend.id!));
+      bool friendIsTyping = isVirtualFriendTyping[virtualFriend.id] ?? false;
+      emit(friendIsTyping
+          ? FriendTypingState(
+              chatHistory: chatHistoryToEmit,
+              typingUsers: [virtualFriend.toChatUser()],
+              virtualFriendId: virtualFriend.id!)
+          : ChatLoadedState(
+              chatHistory: chatHistoryToEmit,
+              virtualFriendId: virtualFriend.id!));
     }, (r) {
       debugPrint("error fetching chat history: ${r.message}");
       emit(ChatLoadedState(
@@ -56,24 +65,54 @@ class ChatCubit extends Cubit<ChatState> {
     final Either<List<SchemaMessageModel>, FailureModel> response =
         await chatRepo.getChatHistoryWithThisFriend(
             virtualFriendId: virtualFriendId, msgToAdd: userNewMsg);
-    response.fold((updatedSchemaMsgs) {
+    response.fold((updatedSchemaMsgs) async {
       SchemaVirtualFriendModel schemaVirtualFriendModel =
           SchemaVirtualFriendModel(
               info: virtualFriend, chatHistory: updatedSchemaMsgs);
       List<ChatMessage> updatedChatHistory =
-          // SchemaVirtualFriendModel()
-          schemaVirtualFriendModel.toListOfChatMessages(
-              // virtualFriend, updatedSchemaMsgs
-              );
-      emit(isVirtualFriendTyping[virtualFriendId] ?? false
-          ? FriendTypingState(
+          schemaVirtualFriendModel.toListOfChatMessages();
+      isVirtualFriendTyping[virtualFriendId] = true;
+      emit(
+          // isVirtualFriendTyping[virtualFriendId] ?? false
+          // ?
+          FriendTypingState(
               chatHistory: updatedChatHistory,
               typingUsers: [chatUserFriend],
               virtualFriendId: virtualFriendId)
-          : ChatLoadedState(
-              chatHistory: updatedChatHistory,
+          // :
+          // ChatLoadedState(
+          //     chatHistory: updatedChatHistory,
+          //     virtualFriendId: virtualFriendId)
+          );
+
+      final friendMsgResponse =
+          await chatRepo.getMsgFromVirtualFriend(schemaVirtualFriendModel);
+      friendMsgResponse.fold((friendMsg) async {
+        final Either<List<SchemaMessageModel>, FailureModel>
+            msgsWithBotNewMsgResp = await chatRepo.getChatHistoryWithThisFriend(
+                virtualFriendId: virtualFriendId,
+                msgToAdd: friendMsg.toChatMessage(virtualFriend.toChatUser()));
+        msgsWithBotNewMsgResp.fold((msgsWithFriendNewMsg) {
+          SchemaVirtualFriendModel schemaVirtualFriendModel =
+              SchemaVirtualFriendModel(
+                  info: virtualFriend, chatHistory: msgsWithFriendNewMsg);
+          List<ChatMessage> updatedChatHistoryWithBotNewMsg =
+              schemaVirtualFriendModel.toListOfChatMessages();
+          emit(ChatLoadedState(
+              chatHistory: updatedChatHistoryWithBotNewMsg,
               virtualFriendId: virtualFriendId));
+          isVirtualFriendTyping[virtualFriendId] = false;
+        }, (r) {
+          debugPrint("error saving bot new msg: ${r.message}");
+        });
+      }, (r) {
+        isVirtualFriendTyping[virtualFriendId] = false;
+        CommonWidgets.customFlushBar(navigatorKey.currentContext!,
+            r.message ?? TextConstants.defaultErrorMsg);
+        debugPrint("error getting bot msg: ${r.message}");
+      });
     }, (r) {
+      isVirtualFriendTyping[virtualFriendId] = false;
       debugPrint("error saving user msg: ${r.message}");
     });
   }

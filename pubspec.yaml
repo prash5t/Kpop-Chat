@@ -68,6 +68,7 @@ dependencies:
   avatar_glow: ^2.0.2
   intl: ^0.18.1
   dart_emoji: ^0.2.0+2
+  mixpanel_flutter: ^2.1.1
 
 dev_dependencies:
   flutter_test:
