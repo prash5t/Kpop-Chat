@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kpopchat/core/constants/firestore_collections_constants.dart';
 import 'package:kpopchat/core/utils/service_locator.dart';
+import 'package:kpopchat/core/utils/shared_preferences_helper.dart';
 import 'package:kpopchat/data/models/user_model.dart';
 import 'package:kpopchat/presentation/common_widgets/common_widgets.dart';
 import 'package:kpopchat/main.dart';
@@ -32,10 +33,13 @@ class AuthRepoImplementation implements AuthRepo {
       final UserCredential googleUserCredential = await locator<FirebaseAuth>()
           .signInWithCredential(googleAuthCredential);
 
+      User? loggedInUser = googleUserCredential.user;
+      SharedPrefsHelper.saveUserProfile(loggedInUser);
+
       final bool isNewUser =
           googleUserCredential.additionalUserInfo?.isNewUser ?? true;
       if (isNewUser) {
-        registerUserProfile(googleUserCredential.user);
+        registerUserProfile(loggedInUser);
       }
 
       debugPrint("user creds: ${googleUserCredential.user.toString()}");

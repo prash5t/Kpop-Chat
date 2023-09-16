@@ -3,6 +3,9 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kpopchat/core/constants/firestore_collections_constants.dart';
 import 'package:kpopchat/core/network/failure_model.dart';
+import 'package:kpopchat/core/utils/schema_helper.dart';
+import 'package:kpopchat/data/models/local_schema_model.dart';
+import 'package:kpopchat/data/models/schema_virtual_friend_model.dart';
 import 'package:kpopchat/data/models/virtual_friend_model.dart';
 import 'package:kpopchat/data/repository/virtual_friends_repo.dart';
 import 'package:uuid/uuid.dart';
@@ -30,10 +33,21 @@ class VirtualFriendsRepoImplementation implements VirtualFriendsRepo {
   }
 
   @override
-  Future<Either<List<VirtualFriendModel>, FailureModel>>
+  Future<Either<LocalSchemaModelOfLoggedInUser, FailureModel>>
       getVirtualFriends() async {
     try {
-      List<VirtualFriendModel> virtualFriends = [];
+// first try to fetch virtual friends locally, if exist locally, provide locally available virtual friends
+      LocalSchemaModelOfLoggedInUser locallyExistingFriends =
+          LocalSchemaModelOfLoggedInUser.fromLocalSchema(
+              localSchema: await SchemaHelper().getLocalSchema() ?? "{}");
+      if (locallyExistingFriends.virtualFriends!.isNotEmpty) {
+        debugPrint("Locally");
+        return Left(locallyExistingFriends);
+      }
+      debugPrint("From network");
+      LocalSchemaModelOfLoggedInUser localSchemaModelOfLoggedInUser =
+          LocalSchemaModelOfLoggedInUser(virtualFriends: []);
+
       QuerySnapshot virtualFriendsSnapshot = await firestore
           .collection(FirestoreCollections.kVirtualFriends)
           .orderBy(VirtualFriendModel.kOrder)
@@ -42,9 +56,13 @@ class VirtualFriendsRepoImplementation implements VirtualFriendsRepo {
       for (DocumentSnapshot friend in virtualFriendsSnapshot.docs) {
         VirtualFriendModel virtualFriend =
             VirtualFriendModel.fromJson(friend.data() as Map<String, dynamic>);
-        virtualFriends.add(virtualFriend);
+
+        localSchemaModelOfLoggedInUser.virtualFriends!.add(
+            SchemaVirtualFriendModel(info: virtualFriend, chatHistory: []));
       }
-      return Left(virtualFriends);
+      // after fetching virtual friends from network, saving it locally too
+      await SchemaHelper().saveLocalSchema(localSchemaModelOfLoggedInUser);
+      return Left(localSchemaModelOfLoggedInUser);
     } catch (e) {
       debugPrint("error getting virtual friends: ${e.toString()}");
       return Right(FailureModel(

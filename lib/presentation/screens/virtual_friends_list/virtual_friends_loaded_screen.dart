@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kpopchat/core/routes/app_routes.dart';
+import 'package:kpopchat/data/models/schema_virtual_friend_model.dart';
 import 'package:kpopchat/data/models/virtual_friend_model.dart';
 import 'package:kpopchat/presentation/common_widgets/cached_image_widget.dart';
 import 'package:kpopchat/presentation/common_widgets/custom_text.dart';
@@ -8,7 +9,7 @@ import 'package:kpopchat/presentation/widgets/virtual_friends_list_screen_widget
 import 'package:kpopchat/presentation/widgets/virtual_friends_list_screen_widgets/zero_virtual_friends_widget.dart';
 
 class VirtualFriendsLoadedScreen extends StatefulWidget {
-  final List<VirtualFriendModel> virtualFriends;
+  final List<SchemaVirtualFriendModel> virtualFriends;
   const VirtualFriendsLoadedScreen({super.key, required this.virtualFriends});
 
   @override
@@ -20,7 +21,7 @@ class _VirtualFriendsLoadedScreenState
     extends State<VirtualFriendsLoadedScreen> {
   @override
   Widget build(BuildContext context) {
-    List<VirtualFriendModel> virtualFriends = widget.virtualFriends;
+    List<SchemaVirtualFriendModel> virtualFriends = widget.virtualFriends;
 
     double deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -30,7 +31,7 @@ class _VirtualFriendsLoadedScreenState
           : ListView.builder(
               itemCount: virtualFriends.length,
               itemBuilder: (context, index) {
-                VirtualFriendModel friendData = virtualFriends[index];
+                VirtualFriendModel friendData = virtualFriends[index].info!;
 
                 return InkWell(
                   onTap: () {

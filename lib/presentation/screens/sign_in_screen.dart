@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kpopchat/presentation/common_widgets/common_decorations.dart';
 import 'package:kpopchat/presentation/common_widgets/common_widgets.dart';
 import 'package:kpopchat/presentation/common_widgets/custom_text.dart';
 import 'package:kpopchat/presentation/common_widgets/loading_overlay_screen.dart';
@@ -48,14 +49,8 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-              ColorConstants.primaryColor,
-              ColorConstants.primaryColorPink
-            ])),
+        decoration: BoxDecoration(
+            gradient: CommonDecoration.appPrimaryGradientBackground()),
         child: Stack(
           children: [
             buildSignInOverallWidget(),

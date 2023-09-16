@@ -26,7 +26,8 @@ class _VirtualFriendsListScreenState extends State<VirtualFriendsListScreen> {
         builder: (context, state) {
           if (state is VirtualFriendsLoadedState) {
             return VirtualFriendsLoadedScreen(
-                virtualFriends: state.virtualFriends);
+                virtualFriends:
+                    state.localSchemaModelOfLoggedInUser.virtualFriends!);
           } else if (state is ErrorLoadingVirtualFriendsState) {
             return Material(
                 child: Center(child: CustomText(text: state.errorMsg)));

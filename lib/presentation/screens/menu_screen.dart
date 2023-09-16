@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kpopchat/business_logic/auth_checker_cubit/auth_checker_cubit.dart';
-import 'package:kpopchat/business_logic/theme_cubit/theme_cubit.dart';
+import 'package:kpopchat/business_logic/theme_cubit.dart';
 import 'package:kpopchat/core/constants/text_constants.dart';
 import 'package:kpopchat/core/themes/dark_theme.dart';
 import 'package:kpopchat/main.dart';

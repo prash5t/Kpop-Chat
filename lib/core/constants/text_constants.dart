@@ -9,4 +9,7 @@ class TextConstants {
   static const String closeAppTitle = "$areYouSure close this app?";
   static const String logoutTitle = "$areYouSure logout?";
   static const String logoutText = "Logout";
+  static const String noInternetMsg =
+      "Please check your internet connection and try again later.";
+  static const String writeYourMsgHint = "Write your message";
 }

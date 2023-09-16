@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kpopchat/business_logic/virtual_friends_cubit/virtual_friends_list_state.dart';
 import 'package:kpopchat/core/constants/text_constants.dart';
 import 'package:kpopchat/core/network/failure_model.dart';
+import 'package:kpopchat/data/models/local_schema_model.dart';
 import 'package:kpopchat/data/models/virtual_friend_model.dart';
 import 'package:kpopchat/data/repository/virtual_friends_repo.dart';
 import 'package:kpopchat/main.dart';
@@ -18,7 +19,7 @@ class VirtualFriendsListCubit extends Cubit<VirtualFriendsListState> {
   }
 
   void getVirtualFriends() async {
-    Either<List<VirtualFriendModel>, FailureModel> response =
+    Either<LocalSchemaModelOfLoggedInUser, FailureModel> response =
         await virtualFriendsRepo.getVirtualFriends();
     response.fold((l) {
       emit(VirtualFriendsLoadedState(l));

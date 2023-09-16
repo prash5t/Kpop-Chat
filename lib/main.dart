@@ -2,10 +2,12 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:kpopchat/business_logic/chat_cubit/chat_cubit.dart';
+import 'package:kpopchat/business_logic/internet_checker_cubit.dart';
 import 'package:kpopchat/business_logic/virtual_friends_cubit/virtual_friends_list_cubit.dart';
 import 'package:kpopchat/core/routes/app_routes.dart';
-import 'package:kpopchat/business_logic/theme_cubit/theme_cubit.dart';
+import 'package:kpopchat/business_logic/theme_cubit.dart';
 import 'package:kpopchat/business_logic/auth_checker_cubit/auth_checker_cubit.dart';
 import 'core/firebase/firebase_setup.dart';
 import 'core/routes/route_generator.dart';
@@ -31,6 +33,9 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => ThemeCubit()),
           BlocProvider(create: (context) => VirtualFriendsListCubit(locator())),
           BlocProvider(create: (context) => ChatCubit(locator())),
+          BlocProvider(
+              create: (context) => InternetConnectivityCubit(
+                  locator<InternetConnectionChecker>())),
         ],
         child: ScreenUtilInit(
           designSize: const Size(375, 812),

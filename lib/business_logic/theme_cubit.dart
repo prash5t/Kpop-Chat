@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kpopchat/core/constants/shared_preferences_keys.dart';
 import 'package:kpopchat/core/utils/service_locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../core/themes/dark_theme.dart';
-import '../../core/themes/light_theme.dart';
+import '../core/themes/dark_theme.dart';
+import '../core/themes/light_theme.dart';
 
 class ThemeCubit extends Cubit<ThemeData> {
   ThemeCubit() : super(lightTheme);

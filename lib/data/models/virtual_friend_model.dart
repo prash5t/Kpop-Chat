@@ -1,3 +1,5 @@
+import 'package:dash_chat_2/dash_chat_2.dart';
+
 class VirtualFriendModel {
   String? id;
   int? order;
@@ -57,5 +59,9 @@ class VirtualFriendModel {
     json[kHobbies] = hobbies;
     json[kAge] = age;
     return json;
+  }
+
+  ChatUser toChatUser() {
+    return ChatUser(id: id!, profileImage: displayPictureUrl, firstName: name);
   }
 }

@@ -1,13 +1,13 @@
-import 'package:kpopchat/data/models/virtual_friend_model.dart';
+import 'package:kpopchat/data/models/local_schema_model.dart';
 
 abstract class VirtualFriendsListState {}
 
 class VirtualFriendsInitialState extends VirtualFriendsListState {}
 
 class VirtualFriendsLoadedState extends VirtualFriendsListState {
-  final List<VirtualFriendModel> virtualFriends;
+  final LocalSchemaModelOfLoggedInUser localSchemaModelOfLoggedInUser;
 
-  VirtualFriendsLoadedState(this.virtualFriends);
+  VirtualFriendsLoadedState(this.localSchemaModelOfLoggedInUser);
 }
 
 class ErrorLoadingVirtualFriendsState extends VirtualFriendsListState {

@@ -1,8 +1,11 @@
+import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kpopchat/business_logic/chat_cubit/chat_cubit.dart';
+import 'package:kpopchat/core/utils/shared_preferences_helper.dart';
 import 'package:kpopchat/data/models/virtual_friend_model.dart';
 import 'package:kpopchat/main.dart';
+import 'package:kpopchat/presentation/screens/chat_screen/chat_loaded_screen.dart';
 import 'package:kpopchat/presentation/widgets/chat_screen_widgets/chat_screen_app_bar.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -34,10 +37,24 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     VirtualFriendModel virtualFriend = widget.virtualFriend;
+    ChatUser loggedInUser =
+        ChatUser(id: SharedPrefsHelper.getUserProfile()!.userId!);
     return Scaffold(
       appBar: chatScreenAppBar(context, virtualFriend),
       body: BlocBuilder<ChatCubit, ChatState>(
         builder: (context, state) {
+          if (state is ChatLoadedState) {
+            return ChatLoadedScreen(
+                chatHistory: state.chatHistory,
+                loggedInUser: loggedInUser,
+                virtualFriendInfo: virtualFriend);
+          } else if (state is FriendTypingState) {
+            return ChatLoadedScreen(
+                chatHistory: state.chatHistory,
+                loggedInUser: loggedInUser,
+                virtualFriendInfo: virtualFriend,
+                typingUsers: state.typingUsers);
+          }
           return const Center(child: CircularProgressIndicator());
         },
 
