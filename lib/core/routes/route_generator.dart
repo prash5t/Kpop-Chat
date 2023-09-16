@@ -4,6 +4,7 @@ import 'package:kpopchat/presentation/screens/auth_checker_screen.dart';
 import 'package:kpopchat/presentation/screens/chat_screen/chat_screen.dart';
 import 'package:kpopchat/presentation/screens/menu_screen.dart';
 import 'package:kpopchat/presentation/screens/sign_in_screen.dart';
+import 'package:kpopchat/presentation/screens/virtual_friend_profile_screen.dart';
 import 'package:kpopchat/presentation/screens/virtual_friends_list/virtual_friends_list_screen.dart';
 import 'app_routes.dart';
 
@@ -24,6 +25,10 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       return CupertinoPageRoute(
           builder: (context) =>
               ChatScreen(virtualFriend: argument as VirtualFriendModel));
+    case AppRoutes.friendProfileScreen:
+      return CupertinoPageRoute(
+          builder: (context) => VirtualFriendProfileScreen(
+              friendInfo: argument as VirtualFriendModel));
     default:
       return CupertinoPageRoute(builder: (context) => const SignInScreen());
   }

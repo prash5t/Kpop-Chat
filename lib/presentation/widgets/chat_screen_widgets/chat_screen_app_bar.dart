@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kpopchat/core/routes/app_routes.dart';
 import 'package:kpopchat/data/models/virtual_friend_model.dart';
 import 'package:kpopchat/presentation/common_widgets/cached_circle_avatar.dart';
 import 'package:kpopchat/presentation/common_widgets/common_widgets.dart';
@@ -23,9 +24,8 @@ PreferredSize chatScreenAppBar(
           SizedBox(width: 17.w),
           GestureDetector(
             onTap: () {
-              // Navigator.of(context).pushNamed(AppRoutes.botProfileScreen,
-              //     arguments: BotProfileScreenModel(
-              //         schemaBotModel: bot, isChoosingBot: false));
+              Navigator.of(context).pushNamed(AppRoutes.friendProfileScreen,
+                  arguments: virtualFriend);
             },
             child: Row(children: [
               CachedCircleAvatar(imageUrl: imageUrl),
