@@ -1,6 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'custom_text.dart';
 
 class CommonWidgets {
@@ -36,6 +37,16 @@ class CommonWidgets {
       ),
       duration: const Duration(seconds: 1),
     ).show(context);
+  }
+
+  static Widget buildBannerAd(BannerAd? bannerAd) {
+    return bannerAd != null
+        ? SizedBox(
+            height: 100.h,
+            width: double.infinity,
+            child: AdWidget(ad: bannerAd),
+          )
+        : const SizedBox();
   }
 
   static Widget buildLineInBottomSheet() =>

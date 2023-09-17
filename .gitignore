@@ -47,4 +47,7 @@ app.*.map.json
 /ios/Runner/GoogleService-Info.plist
 /android/app/google-services.json
 /lib/core/constants/env_keys_constants.dart
+/lib/core/constants/google_ads_id.dart
 /ios/Flutter/EnvKeys.xcconfig
+.env
+.vscode/

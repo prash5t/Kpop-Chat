@@ -10,8 +10,6 @@ import 'package:kpopchat/core/routes/app_routes.dart';
 import 'package:kpopchat/business_logic/theme_cubit.dart';
 import 'package:kpopchat/business_logic/auth_checker_cubit/auth_checker_cubit.dart';
 import 'package:kpopchat/core/utils/initializer.dart';
-import 'core/constants/network_constants.dart';
-import 'core/constants/prompt_constants.dart';
 import 'core/firebase/firebase_setup.dart';
 import 'core/routes/route_generator.dart';
 import 'core/utils/service_locator.dart';
@@ -21,8 +19,6 @@ void main() async {
   await FirebaseSetup().initializeFirebase();
   await setUpLocator();
   RequiredInitializations.initializeFirebaseRemoteConfig();
-  print(
-      "system msg: ${PromptConstants.systemMsg} \n maxtokens: ${PromptConstants.maxTokens} \n edenaikey: ${NetworkConstants.edenAIKey} \n temperature: ${PromptConstants.temperature}");
   runApp(const MyApp());
 }
 
