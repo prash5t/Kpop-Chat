@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kpopchat/business_logic/auth_checker_cubit/auth_checker_cubit.dart';
 import 'package:kpopchat/business_logic/theme_cubit.dart';
 import 'package:kpopchat/core/constants/analytics_constants.dart';
+import 'package:kpopchat/core/constants/google_ads_id.dart';
 import 'package:kpopchat/core/constants/text_constants.dart';
 import 'package:kpopchat/core/themes/dark_theme.dart';
+import 'package:kpopchat/core/utils/admob_services.dart';
 import 'package:kpopchat/core/utils/analytics.dart';
 import 'package:kpopchat/main.dart';
 import 'package:kpopchat/presentation/common_widgets/bool_bottom_sheet.dart';
@@ -23,11 +26,37 @@ class MenuScreen extends StatefulWidget {
 }
 
 class _MenuScreenState extends State<MenuScreen> {
+  ValueNotifier<BannerAd?> menuScreenBannerAd = ValueNotifier<BannerAd?>(null);
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadBannerAd();
+  }
+
+  void _loadBannerAd() async {
+    menuScreenBannerAd.value = await AdMobServices.getBannerAdByGivingAdId(
+        GoogleAdId.menuScreenBannerAdId)
+      ..load();
+  }
+
+  @override
+  void dispose() {
+    menuScreenBannerAd.value?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonWidgets.customAppBar(
           context, buildAppBarForMenuScreen(context)),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: ValueListenableBuilder(
+        valueListenable: menuScreenBannerAd,
+        builder: (context, value, child) {
+          return CommonWidgets.buildBannerAd(value);
+        },
+      ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 5.w),
         child: Column(

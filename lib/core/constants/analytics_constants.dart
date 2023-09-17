@@ -9,4 +9,10 @@ class AnalyticsConstants {
   static const String kEventPolicyClicked = "policy_clicked";
   static const String kProperyMsgSentCount = "total_messages_sent";
   static const String kPropertyEdenAiCreditSpent = "edenai_credit_spent";
+
+  // below is ad events and properties
+  static const String kEventBannerAdLoaded = "banner_ad_loaded";
+  static const String kEventBannerAdOpened = "banner_ad_opened";
+  static const String kEventBannerAdClicked = "banner_ad_clicked";
+  static const String kEventBannerAdApproxPaid = "banner_ad_paid";
 }

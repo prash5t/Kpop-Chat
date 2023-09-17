@@ -6,7 +6,9 @@ import 'custom_text.dart';
 
 class CommonWidgets {
   static PreferredSize customAppBar(
-      BuildContext context, Widget appBarContents) {
+    BuildContext context,
+    Widget appBarContents,
+  ) {
     return PreferredSize(
       preferredSize: Size.fromHeight(70.h),
       child: Column(
@@ -41,8 +43,9 @@ class CommonWidgets {
 
   static Widget buildBannerAd(BannerAd? bannerAd) {
     return bannerAd != null
-        ? SizedBox(
-            height: 100.h,
+        ? Container(
+            color: Colors.transparent,
+            height: bannerAd.size.height.toDouble(),
             width: double.infinity,
             child: AdWidget(ad: bannerAd),
           )

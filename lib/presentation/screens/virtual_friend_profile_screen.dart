@@ -1,22 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kpopchat/core/constants/color_constants.dart';
+import 'package:kpopchat/core/constants/google_ads_id.dart';
+import 'package:kpopchat/core/utils/admob_services.dart';
 import 'package:kpopchat/data/models/virtual_friend_model.dart';
 import 'package:kpopchat/presentation/common_widgets/cached_image_widget.dart';
+import 'package:kpopchat/presentation/common_widgets/common_widgets.dart';
 import 'package:kpopchat/presentation/common_widgets/custom_text.dart';
 import 'package:kpopchat/presentation/widgets/friend_profile_widgets/friend_profile_appbar.dart';
 import 'package:simple_tags/simple_tags.dart';
 
-class VirtualFriendProfileScreen extends StatelessWidget {
+class VirtualFriendProfileScreen extends StatefulWidget {
   final VirtualFriendModel friendInfo;
   const VirtualFriendProfileScreen({super.key, required this.friendInfo});
 
   @override
+  State<VirtualFriendProfileScreen> createState() =>
+      _VirtualFriendProfileScreenState();
+}
+
+class _VirtualFriendProfileScreenState
+    extends State<VirtualFriendProfileScreen> {
+  ValueNotifier<BannerAd?> friendProfileScreenBannerAd =
+      ValueNotifier<BannerAd?>(null);
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadBannerAd();
+  }
+
+  void _loadBannerAd() async {
+    friendProfileScreenBannerAd.value = await AdMobServices
+        .getBannerAdByGivingAdId(GoogleAdId.friendProfileScreenBannerAdId)
+      ..load();
+  }
+
+  @override
+  void dispose() {
+    friendProfileScreenBannerAd.value?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     List<String> hobbies =
-        friendInfo.hobbies!.map((e) => e.toString()).toList();
+        widget.friendInfo.hobbies!.map((e) => e.toString()).toList();
     return Scaffold(
       appBar: buildFriendProfileAppBar(context),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: ValueListenableBuilder(
+        valueListenable: friendProfileScreenBannerAd,
+        builder: (context, value, child) {
+          return CommonWidgets.buildBannerAd(value);
+        },
+      ),
       body: ListView(
         children: [
           Padding(
@@ -36,7 +74,7 @@ class VirtualFriendProfileScreen extends StatelessWidget {
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(15.r),
                       child: CachedImageWidget(
-                          imageUrl: friendInfo.displayPictureUrl ?? "")),
+                          imageUrl: widget.friendInfo.displayPictureUrl ?? "")),
                 ),
                 SizedBox(height: 20.h),
                 Column(
@@ -53,7 +91,8 @@ class VirtualFriendProfileScreen extends StatelessWidget {
                         SizedBox(width: 8.w),
                         Expanded(
                           child: CustomText(
-                            text: "${friendInfo.name}, ${friendInfo.age}",
+                            text:
+                                "${widget.friendInfo.name}, ${widget.friendInfo.age}",
                             textColor: Theme.of(context).primaryColor,
                             isBold: true,
                             size: 30.sp,
@@ -71,7 +110,7 @@ class VirtualFriendProfileScreen extends StatelessWidget {
                     SizedBox(width: 7.w),
                     CustomText(
                       text:
-                          "Lives in ${friendInfo.city}, ${friendInfo.country}",
+                          "Lives in ${widget.friendInfo.city}, ${widget.friendInfo.country}",
                       size: 16.sp,
                     ),
                   ],

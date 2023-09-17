@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:kpopchat/core/constants/google_ads_id.dart';
 import 'package:kpopchat/core/routes/app_routes.dart';
+import 'package:kpopchat/core/utils/admob_services.dart';
 import 'package:kpopchat/data/models/schema_virtual_friend_model.dart';
 import 'package:kpopchat/data/models/virtual_friend_model.dart';
 import 'package:kpopchat/presentation/common_widgets/cached_image_widget.dart';
+import 'package:kpopchat/presentation/common_widgets/common_widgets.dart';
 import 'package:kpopchat/presentation/common_widgets/custom_text.dart';
 import 'package:kpopchat/presentation/widgets/virtual_friends_list_screen_widgets/app_bar.dart';
 import 'package:kpopchat/presentation/widgets/virtual_friends_list_screen_widgets/zero_virtual_friends_widget.dart';
@@ -19,6 +23,20 @@ class VirtualFriendsLoadedScreen extends StatefulWidget {
 
 class _VirtualFriendsLoadedScreenState
     extends State<VirtualFriendsLoadedScreen> {
+  ValueNotifier<BannerAd?> virtualFriendsListScreenBannerAd =
+      ValueNotifier<BannerAd?>(null);
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadBannerAd();
+  }
+
+  void _loadBannerAd() async {
+    virtualFriendsListScreenBannerAd.value = await AdMobServices
+        .getBannerAdByGivingAdId(GoogleAdId.homeScreenBannerAdId)
+      ..load();
+  }
+
   @override
   Widget build(BuildContext context) {
     List<SchemaVirtualFriendModel> virtualFriends = widget.virtualFriends;
@@ -26,6 +44,13 @@ class _VirtualFriendsLoadedScreenState
     double deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: conversationsScreenAppBar(context),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: ValueListenableBuilder(
+        valueListenable: virtualFriendsListScreenBannerAd,
+        builder: (context, value, child) {
+          return CommonWidgets.buildBannerAd(value);
+        },
+      ),
       body: virtualFriends.isEmpty
           ? const ZeroVirtualFriendsWidget()
           : ListView.builder(

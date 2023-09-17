@@ -16,6 +16,8 @@
 	</dict>
 </array>
 <!-- End of the Google Sign-in Section -->
+	<key>GADApplicationIdentifier</key>
+	<string>${ADMOB_APP_ID}</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

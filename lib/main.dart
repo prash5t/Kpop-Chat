@@ -19,6 +19,8 @@ void main() async {
   await FirebaseSetup().initializeFirebase();
   await setUpLocator();
   RequiredInitializations.initializeFirebaseRemoteConfig();
+  RequiredInitializations.initializeMobileAds();
+
   runApp(const MyApp());
 }
 
