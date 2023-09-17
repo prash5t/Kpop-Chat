@@ -65,8 +65,12 @@ class _VirtualFriendsLoadedScreenState
                   },
                   child: Center(
                     child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 5.w, vertical: 3.h),
+                      padding: EdgeInsets.only(
+                          left: 5.w,
+                          right: 5.w,
+                          top: 3.h,
+                          bottom:
+                              virtualFriends.length - index == 1 ? 60.h : 3.h),
                       child: Stack(
                         alignment: Alignment.bottomLeft,
                         children: [
