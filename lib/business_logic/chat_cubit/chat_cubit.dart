@@ -21,6 +21,21 @@ class ChatCubit extends Cubit<ChatState> {
 
   UserModel? loggedInUser = SharedPrefsHelper.getUserProfile();
 
+  /// this property to be used to show interstitial ad
+  /// after sending three messages, we are targeting to show  interstitial ad to user
+  /// Initializing it with 3 so that every time user sents first msg after opening app, we show ad first
+  /// After showing ad, need to reset this to zero, and increase by 1 evertime user sends a msg
+  /// again when it reaches 3, we show ad
+  int messagesSent = 2;
+  bool shouldShowChatInterstitialAd() {
+    messagesSent += 1;
+    if (messagesSent <= 2) {
+      return false;
+    }
+    messagesSent = 0; // resetting
+    return true;
+  }
+
   /// to track  chat screen is open or not with any virtual friends
   Map<String, bool> chatScreenOpen = {};
 

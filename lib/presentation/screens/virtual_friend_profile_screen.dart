@@ -24,10 +24,42 @@ class _VirtualFriendProfileScreenState
     extends State<VirtualFriendProfileScreen> {
   ValueNotifier<BannerAd?> friendProfileScreenBannerAd =
       ValueNotifier<BannerAd?>(null);
+  ValueNotifier<InterstitialAd?> friendProfileInterstitialAd =
+      ValueNotifier<InterstitialAd?>(null);
+  bool interstitialAdShown = false;
+
+  @override
+  void initState() {
+    _loadInterstitialAd();
+    super.initState();
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _loadBannerAd();
+  }
+
+  void _showInterstitialAd() async {
+    await AdMobServices.showInterstitialAd(friendProfileInterstitialAd, () {
+      _loadInterstitialAd();
+    });
+  }
+
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+        adUnitId: GoogleAdId.friendProfileScreenInterstitialAdId,
+        request: const AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+            onAdLoaded: (ad) {
+              friendProfileInterstitialAd.value = ad;
+              if (!interstitialAdShown) {
+                _showInterstitialAd();
+              }
+              interstitialAdShown = true;
+            },
+            onAdFailedToLoad: (LoadAdError error) =>
+                friendProfileInterstitialAd.value = null));
   }
 
   void _loadBannerAd() async {

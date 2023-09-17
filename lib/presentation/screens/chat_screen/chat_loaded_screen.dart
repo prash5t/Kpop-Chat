@@ -2,10 +2,13 @@ import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kpopchat/business_logic/chat_cubit/chat_cubit.dart';
 import 'package:kpopchat/business_logic/internet_checker_cubit.dart';
 import 'package:kpopchat/core/constants/analytics_constants.dart';
+import 'package:kpopchat/core/constants/google_ads_id.dart';
 import 'package:kpopchat/core/constants/text_constants.dart';
+import 'package:kpopchat/core/utils/admob_services.dart';
 import 'package:kpopchat/core/utils/analytics.dart';
 import 'package:kpopchat/data/models/virtual_friend_model.dart';
 import 'package:kpopchat/main.dart';
@@ -30,6 +33,8 @@ class ChatLoadedScreen extends StatefulWidget {
 }
 
 class _ChatLoadedScreenState extends State<ChatLoadedScreen> {
+  ValueNotifier<InterstitialAd?> msgInterstitialAd =
+      ValueNotifier<InterstitialAd?>(null);
   TextEditingController userMsgTextFieldController = TextEditingController();
 
   @override
@@ -38,6 +43,32 @@ class _ChatLoadedScreenState extends State<ChatLoadedScreen> {
             .userMsgOnTextfield[widget.virtualFriendInfo.id] ??
         "";
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadInterstitialAd();
+  }
+
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+        adUnitId: GoogleAdId.msgInterstitialAdId,
+        request: const AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+            onAdLoaded: (ad) => msgInterstitialAd.value = ad,
+            onAdFailedToLoad: (LoadAdError error) =>
+                msgInterstitialAd.value = null));
+  }
+
+  void _showChatInterstitialAd() {
+    bool shouldShowAd =
+        BlocProvider.of<ChatCubit>(context).shouldShowChatInterstitialAd();
+    if (shouldShowAd) {
+      AdMobServices.showInterstitialAd(msgInterstitialAd, () {
+        _loadInterstitialAd();
+      });
+    }
   }
 
   @override
@@ -58,9 +89,6 @@ class _ChatLoadedScreenState extends State<ChatLoadedScreen> {
           inputToolbarMargin:
               const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           alwaysShowSend: true,
-          // sendButtonBuilder: (onSend) {
-          //   return messageSendButtonBuilder(onSend);
-          // }
         ),
         currentUser: widget.loggedInUser,
         typingUsers: widget.typingUsers,
@@ -72,6 +100,7 @@ class _ChatLoadedScreenState extends State<ChatLoadedScreen> {
                 await BlocProvider.of<InternetConnectivityCubit>(context)
                     .isInternetConnected();
             if (internetAvailable) {
+              _showChatInterstitialAd();
               increasePropertyCount(AnalyticsConstants.kProperyMsgSentCount, 1);
               BlocProvider.of<ChatCubit>(navigatorKey.currentContext!)
                   .sendNewMsgToFriend(userNewMsg, widget.virtualFriendInfo);

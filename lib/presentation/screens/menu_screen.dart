@@ -27,10 +27,23 @@ class MenuScreen extends StatefulWidget {
 
 class _MenuScreenState extends State<MenuScreen> {
   ValueNotifier<BannerAd?> menuScreenBannerAd = ValueNotifier<BannerAd?>(null);
+  ValueNotifier<InterstitialAd?> switchThemeInterstitialAd =
+      ValueNotifier<InterstitialAd?>(null);
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _loadBannerAd();
+    _loadInterstitialAd();
+  }
+
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+        adUnitId: GoogleAdId.switchThemeInterstitialAdId,
+        request: const AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+            onAdLoaded: (ad) => switchThemeInterstitialAd.value = ad,
+            onAdFailedToLoad: (LoadAdError error) =>
+                switchThemeInterstitialAd.value = null));
   }
 
   void _loadBannerAd() async {
@@ -42,6 +55,7 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   void dispose() {
     menuScreenBannerAd.value?.dispose();
+    switchThemeInterstitialAd.value?.dispose();
     super.dispose();
   }
 
@@ -74,8 +88,14 @@ class _MenuScreenState extends State<MenuScreen> {
                     padding: EdgeInsets.symmetric(vertical: 10.h),
                     child: DayNightSwitch(
                         value: currentTheme == darkTheme,
-                        onChanged: (bool val) {
-                          BlocProvider.of<ThemeCubit>(context).changeTheme();
+                        onChanged: (bool val) async {
+                          await AdMobServices.showInterstitialAd(
+                              switchThemeInterstitialAd, () {
+                            _loadInterstitialAd();
+                          });
+                          BlocProvider.of<ThemeCubit>(
+                                  navigatorKey.currentContext!)
+                              .changeTheme();
                         }),
                   );
                 },

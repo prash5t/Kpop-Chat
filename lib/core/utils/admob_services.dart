@@ -48,4 +48,31 @@ class AdMobServices {
         listener: AdMobServices.bannerAdListener,
         request: const AdRequest());
   }
+
+  static Future<void> showInterstitialAd(
+      ValueNotifier<InterstitialAd?> interstitialAdNotifier,
+      Function() callBackToLoadInterstitialAd) async {
+    if (interstitialAdNotifier.value != null) {
+      interstitialAdNotifier.value!.fullScreenContentCallback =
+          FullScreenContentCallback(
+        onAdDismissedFullScreenContent: (ad) {
+          ad.dispose();
+          callBackToLoadInterstitialAd();
+        },
+        onAdFailedToShowFullScreenContent: (ad, error) {
+          debugPrint("failed to show interstitial ad");
+          ad.dispose();
+          callBackToLoadInterstitialAd();
+        },
+        onAdShowedFullScreenContent: (ad) {
+          if (!kDebugMode) {
+            logEventInAnalytics(AnalyticsConstants.kEventInterstitialAdShowed);
+          }
+          debugPrint("Showed Interstitial ad full screen content");
+        },
+      );
+      interstitialAdNotifier.value!.show();
+      interstitialAdNotifier.value = null;
+    }
+  }
 }
