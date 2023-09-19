@@ -4,4 +4,6 @@ class RemoteConfigKeys {
   static const String kKeyTemperature = "temperature";
   static const String kKeyMaxTokens = "max_tokens";
   static const String kKeyMaxMsgsToTake = "max_messages_to_take";
+  static const String kKeyChatRewardUnlockTimeInMins =
+      "chat_reward_unlock_time_in_mins";
 }

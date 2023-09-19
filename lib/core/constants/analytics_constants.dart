@@ -17,4 +17,7 @@ class AnalyticsConstants {
   static const String kEventBannerAdApproxPaid = "banner_ad_paid";
 
   static const String kEventInterstitialAdShowed = "interstitial_ad_shown";
+
+  static const String kEventRewardedAdEarnedReward =
+      "rewarded_ad_earned_reward";
 }

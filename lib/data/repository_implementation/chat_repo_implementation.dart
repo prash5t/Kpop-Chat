@@ -3,7 +3,7 @@ import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kpopchat/core/constants/analytics_constants.dart';
 import 'package:kpopchat/core/constants/network_constants.dart';
-import 'package:kpopchat/core/constants/prompt_constants.dart';
+import 'package:kpopchat/core/constants/remote_config_values.dart';
 import 'package:kpopchat/core/constants/text_constants.dart';
 import 'package:kpopchat/core/network/client/base_client.dart';
 import 'package:kpopchat/core/network/failure_model.dart';
@@ -68,11 +68,11 @@ class ChatRepoImplementation implements ChatRepo {
       "providers": "openai",
       "text": schemaVirtualFriend.chatHistory?.first.message ?? "Hello",
       "chatbot_global_action":
-          "${PromptConstants.systemMsg} ${schemaVirtualFriend.info?.toJson()} ${userInfo != null ? "and information of user you are responding to is: $userInfo" : ""}",
+          "${RemoteConfigValues.systemMsg} ${schemaVirtualFriend.info?.toJson()} ${userInfo != null ? "and information of user you are responding to is: $userInfo" : ""}",
       "previous_history":
-          previousHistory.take(PromptConstants.maxMessagesToTake).toList(),
-      "temperature": PromptConstants.temperature,
-      "max_tokens": PromptConstants.maxTokens
+          previousHistory.take(RemoteConfigValues.maxMessagesToTake).toList(),
+      "temperature": RemoteConfigValues.temperature,
+      "max_tokens": RemoteConfigValues.maxTokens
     };
     try {
       final response = await baseClient.postRequest(
