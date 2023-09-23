@@ -8,6 +8,7 @@ class AnalyticsConstants {
   static const String kEventSignOut = "signed_out";
   static const String kEventPolicyClicked = "policy_clicked";
   static const String kProperyMsgSentCount = "total_messages_sent";
+  static const String kPropertyRewardsEarned = "rewards_earned";
   static const String kPropertyEdenAiCreditSpent = "edenai_credit_spent";
 
   // below is ad events and properties

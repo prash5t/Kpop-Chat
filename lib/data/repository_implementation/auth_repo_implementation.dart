@@ -51,7 +51,7 @@ class AuthRepoImplementation implements AuthRepo {
     } catch (e) {
       debugPrint("error sign in with google: ${e.toString()}");
       CommonWidgets.customFlushBar(
-          navigatorKey.currentContext!, "sign in fail");
+          navigatorKey.currentContext!, "sign in fail $e");
       return false;
     }
   }

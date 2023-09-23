@@ -140,6 +140,8 @@ class _VirtualFriendsLoadedScreenState
                     AnalyticsConstants.kEventRewardedAdEarnedReward,
                     parameters: {"coin": reward.amount});
                 coinsEarned += reward.amount.toInt();
+                increasePropertyCount(AnalyticsConstants.kPropertyRewardsEarned,
+                    reward.amount.toDouble());
                 debugPrint("Total coins: $coinsEarned");
               },
             );
