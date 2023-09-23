@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kpopchat/core/constants/remote_config_values.dart';
 import 'package:kpopchat/core/constants/text_constants.dart';
 import 'package:kpopchat/core/network/failure_model.dart';
 import 'package:kpopchat/core/utils/shared_preferences_helper.dart';
@@ -23,13 +24,14 @@ class ChatCubit extends Cubit<ChatState> {
 
   /// this property to be used to show interstitial ad
   /// after sending three messages, we are targeting to show  interstitial ad to user
-  /// Initializing it with 3 so that every time user sents first msg after opening app, we show ad first
+  /// Initializing it with 6 so that every time user sents first msg after opening app, we show ad first
   /// After showing ad, need to reset this to zero, and increase by 1 evertime user sends a msg
-  /// again when it reaches 3, we show ad
-  int messagesSent = 2;
+  /// again when it reaches 6, we show ad
+  int messagesSent = RemoteConfigValues.msgsToAllowAfterShowingOneAd;
+  int limit = RemoteConfigValues.msgsToAllowAfterShowingOneAd;
   bool shouldShowChatInterstitialAd() {
     messagesSent += 1;
-    if (messagesSent <= 2) {
+    if (messagesSent <= limit) {
       return false;
     }
     messagesSent = 0; // resetting

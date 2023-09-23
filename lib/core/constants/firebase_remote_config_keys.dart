@@ -6,4 +6,6 @@ class RemoteConfigKeys {
   static const String kKeyMaxMsgsToTake = "max_messages_to_take";
   static const String kKeyChatRewardUnlockTimeInMins =
       "chat_reward_unlock_time_in_mins";
+  static const String kKeyMessagesToAllowAfterShowingOneAd =
+      "messages_to_allow_after_showing_one_ad";
 }

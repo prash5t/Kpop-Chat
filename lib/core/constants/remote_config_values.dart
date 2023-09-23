@@ -6,4 +6,5 @@ class RemoteConfigValues {
   static int maxTokens = 40;
   static int maxMessagesToTake = 5;
   static int chatRewardUnlockTimeInMins = 60;
+  static int msgsToAllowAfterShowingOneAd = 6;
 }

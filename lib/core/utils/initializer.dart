@@ -20,6 +20,8 @@ class RequiredInitializations {
         rc.getInt(RemoteConfigKeys.kKeyMaxMsgsToTake);
     RemoteConfigValues.chatRewardUnlockTimeInMins =
         rc.getInt(RemoteConfigKeys.kKeyChatRewardUnlockTimeInMins);
+    RemoteConfigValues.msgsToAllowAfterShowingOneAd =
+        rc.getInt(RemoteConfigKeys.kKeyMessagesToAllowAfterShowingOneAd);
   }
 
   static void initializeMobileAds() {
