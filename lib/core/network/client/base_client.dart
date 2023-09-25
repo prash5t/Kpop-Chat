@@ -15,5 +15,6 @@ abstract class BaseClient {
     Map<String, dynamic>? data,
     required String path,
     bool showDialog = false,
+    bool requiresAuthorization = true,
   });
 }

@@ -13,13 +13,15 @@ class BaseClientImplementation extends BaseClient {
     Map<String, dynamic>? data,
     required String path,
     bool showDialog = false,
+    bool requiresAuthorization = true,
   }) async {
     Response? response;
     if (showDialog) {
       showLoadingDialog();
     }
     // try {
-    Map<String, String> header = getHeader();
+    Map<String, String> header =
+        getHeader(requiresAuthorization: requiresAuthorization);
     if (optionalHeaders != null) {
       header.addAll(optionalHeaders);
     }

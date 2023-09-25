@@ -51,3 +51,4 @@ app.*.map.json
 /ios/Flutter/EnvKeys.xcconfig
 .env
 .vscode/
+/lib/data/repository/data_filter_repo.dart
