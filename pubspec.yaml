@@ -70,6 +70,8 @@ dependencies:
   dart_emoji: ^0.2.0+2
   mixpanel_flutter: ^2.1.1
   google_mobile_ads: ^3.0.0
+  flutter_map: ^5.0.0
+  popup: ^0.0.1
 
 dev_dependencies:
   flutter_test:
