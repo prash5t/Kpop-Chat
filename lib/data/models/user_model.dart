@@ -24,7 +24,7 @@ class UserModel {
     emailVerified = json[kEmailVerified];
     isAnonymous = json[kIsAnonymous];
     photoURL = json[kPhotoURL];
-    kpopScore = int.parse(json[kScore] ?? "0");
+    kpopScore = json[kScore];
   }
 
   UserModel.fromFirebaseCurrentUser(User currentUser) {

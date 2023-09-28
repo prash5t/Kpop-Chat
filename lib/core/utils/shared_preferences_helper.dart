@@ -30,6 +30,19 @@ class SharedPrefsHelper {
         SharedPrefsKeys.kFriendLastUnlockTime, jsonEncode(unlockRecords));
   }
 
+  static void increaseKpopScore() {
+    String? userData =
+        locator<SharedPreferences>().getString(SharedPrefsKeys.kUserProfile);
+    if (userData != null) {
+      UserModel userValues = UserModel.fromJson(jsonDecode(userData));
+      int currentScore = userValues.kpopScore ?? 0;
+      userValues.kpopScore = currentScore + 1;
+      Map<String, dynamic> updatedRecords = userValues.toJson();
+      locator<SharedPreferences>()
+          .setString(SharedPrefsKeys.kUserProfile, jsonEncode(updatedRecords));
+    }
+  }
+
   static bool lastUnlockWasWithinAnHour(String virtualFriendId) {
     Map<String, dynamic> unlockRecords = jsonDecode(locator<SharedPreferences>()
             .getString(SharedPrefsKeys.kFriendLastUnlockTime) ??
