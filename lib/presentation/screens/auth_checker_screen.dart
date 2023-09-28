@@ -13,7 +13,9 @@ class AuthCheckerScreen extends StatelessWidget {
         listener: (context, state) {
           if (state == AuthStates.loggedInState) {
             Navigator.of(context).pushNamedAndRemoveUntil(
-                AppRoutes.virtualFriendsListScreen, (route) => false);
+                AppRoutes.dashboardScreen,
+                // AppRoutes.virtualFriendsListScreen,
+                (route) => false);
           } else if (state == AuthStates.loggedOutState) {
             Navigator.of(context).pushNamedAndRemoveUntil(
                 AppRoutes.signInScreen, (route) => false);

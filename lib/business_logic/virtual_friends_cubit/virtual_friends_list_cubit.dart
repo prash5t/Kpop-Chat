@@ -14,6 +14,7 @@ class VirtualFriendsListCubit extends Cubit<VirtualFriendsListState> {
   VirtualFriendsListCubit(this.virtualFriendsRepo)
       : super(VirtualFriendsInitialState());
 
+  LocalSchemaModelOfLoggedInUser? loadedSchemaOfFriends;
   void resetVirtualFriendsListState() {
     emit(VirtualFriendsInitialState());
   }
@@ -22,6 +23,7 @@ class VirtualFriendsListCubit extends Cubit<VirtualFriendsListState> {
     Either<LocalSchemaModelOfLoggedInUser, FailureModel> response =
         await virtualFriendsRepo.getVirtualFriends();
     response.fold((l) {
+      loadedSchemaOfFriends = l;
       emit(VirtualFriendsLoadedState(l));
     }, (r) {
       emit(ErrorLoadingVirtualFriendsState(

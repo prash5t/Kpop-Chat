@@ -1,4 +1,5 @@
 import 'package:dash_chat_2/dash_chat_2.dart';
+import 'package:kpopchat/data/models/lat_ling_model.dart';
 
 class VirtualFriendModel {
   String? id;
@@ -10,17 +11,21 @@ class VirtualFriendModel {
   String? profession;
   String? lastUnlockedTime;
   List<dynamic>? hobbies;
+  LatLong? latLong;
+
   int? age;
-  VirtualFriendModel(
-      {this.id,
-      this.order,
-      this.name,
-      this.country,
-      this.city,
-      this.displayPictureUrl,
-      this.profession,
-      this.lastUnlockedTime,
-      this.hobbies});
+  VirtualFriendModel({
+    this.id,
+    this.order,
+    this.name,
+    this.country,
+    this.city,
+    this.displayPictureUrl,
+    this.profession,
+    this.lastUnlockedTime,
+    this.hobbies,
+    this.latLong,
+  });
 
   static const String kId = "id";
   static const String kOrder = "order";
@@ -32,6 +37,7 @@ class VirtualFriendModel {
   static const String kLastUnlockedTime = "last_unlocked_time";
   static const String kHobbies = "hobbies";
   static const String kAge = "age";
+  static const String kLatLong = "latlong";
 
   VirtualFriendModel.fromJson(Map<String, dynamic> json) {
     id = json[kId];
@@ -44,6 +50,7 @@ class VirtualFriendModel {
     lastUnlockedTime = json[kLastUnlockedTime];
     hobbies = json[kHobbies];
     age = json[kAge];
+    latLong = LatLong.fromJson(json[kLatLong]);
   }
 
   Map<String, dynamic> toJson() {
@@ -58,6 +65,7 @@ class VirtualFriendModel {
     json[kLastUnlockedTime] = lastUnlockedTime;
     json[kHobbies] = hobbies;
     json[kAge] = age;
+    json[kLatLong] = latLong?.toJson();
     return json;
   }
 

@@ -7,6 +7,7 @@ class UserModel {
   bool? emailVerified;
   bool? isAnonymous;
   String? photoURL;
+  int? kpopScore;
 
   static const String kUid = "uid";
   static const String kDisplayName = "displayName";
@@ -14,6 +15,7 @@ class UserModel {
   static const String kEmailVerified = "isEmailVerified";
   static const String kIsAnonymous = "isAnonymous";
   static const String kPhotoURL = "photoURL";
+  static const String kScore = "score";
 
   UserModel.fromJson(Map<String, dynamic> json) {
     userId = json[kUid];
@@ -22,6 +24,7 @@ class UserModel {
     emailVerified = json[kEmailVerified];
     isAnonymous = json[kIsAnonymous];
     photoURL = json[kPhotoURL];
+    kpopScore = int.parse(json[kScore] ?? "0");
   }
 
   UserModel.fromFirebaseCurrentUser(User currentUser) {
@@ -40,7 +43,8 @@ class UserModel {
       kEmail: email,
       kEmailVerified: emailVerified,
       kIsAnonymous: isAnonymous,
-      kPhotoURL: photoURL
+      kPhotoURL: photoURL,
+      kScore: kpopScore,
     };
   }
 }

@@ -82,7 +82,7 @@ class _SignInScreenState extends State<SignInScreen> {
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.onSecondary.withOpacity(0.9),
+              color: Theme.of(context).colorScheme.onSecondary.withOpacity(0.8),
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30.r),
                 topRight: Radius.circular(30.r),
@@ -106,7 +106,8 @@ class _SignInScreenState extends State<SignInScreen> {
                     logEventInAnalytics(AnalyticsConstants.kEventSignedIn);
                     Navigator.of(navigatorKey.currentContext!)
                         .pushNamedAndRemoveUntil(
-                            AppRoutes.virtualFriendsListScreen,
+                            AppRoutes.dashboardScreen,
+                            // AppRoutes.virtualFriendsListScreen,
                             (route) => false);
                   }
                   setState(() {
@@ -115,6 +116,21 @@ class _SignInScreenState extends State<SignInScreen> {
                 }),
                 PolicyWidget(policyRecognizer: _policyRecognizer),
               ],
+            ),
+          ),
+          Positioned(
+            top: -140,
+            child: Image.asset(
+              AssetPathConstants.kWaitingGirlGIF,
+              width: 200,
+            ),
+          ),
+          Positioned(
+            top: -120,
+            left: 200,
+            child: Image.asset(
+              AssetPathConstants.kWaitingDogGIF,
+              width: 180,
             ),
           ),
         ])
@@ -164,7 +180,7 @@ class PleaseLoginText extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: 7.h, bottom: 31.h),
       child: const CustomText(
-        text: "Please login to your account",
+        text: "Welcome to the ultimate K-pop fan haven!",
         size: 16,
         textColor: ColorConstants.oxFF545454,
       ),
@@ -181,7 +197,12 @@ class WelcomeText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 35.h),
-      child: const CustomText(text: "Welcome", isBold: true, size: 35),
+      child: const CustomText(
+        text: "Yayyy!!",
+        isBold: true,
+        size: 35,
+        textColor: ColorConstants.oxFF545454,
+      ),
     );
   }
 }
