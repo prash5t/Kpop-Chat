@@ -6,7 +6,7 @@ import 'package:kpopchat/data/models/virtual_friend_model.dart';
 import 'package:kpopchat/presentation/common_widgets/cached_circle_avatar.dart';
 import 'package:kpopchat/presentation/common_widgets/common_widgets.dart';
 import 'package:kpopchat/presentation/common_widgets/custom_text.dart';
-import 'package:kpopchat/presentation/widgets/chat_screen_widgets/online_status_widger.dart';
+import 'package:kpopchat/presentation/widgets/chat_screen_widgets/online_status_widget.dart';
 
 PreferredSize chatScreenAppBar(
     BuildContext context, VirtualFriendModel virtualFriend) {

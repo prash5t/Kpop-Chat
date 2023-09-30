@@ -14,10 +14,13 @@ import 'package:kpopchat/core/network/client/base_client_impl.dart';
 import 'package:kpopchat/core/utils/schema_helper.dart';
 import 'package:kpopchat/data/repository/auth_repo.dart';
 import 'package:kpopchat/data/repository/chat_repo.dart';
+import 'package:kpopchat/data/repository/remote_config_repo.dart';
 import 'package:kpopchat/data/repository/virtual_friends_repo.dart';
 import 'package:kpopchat/data/repository_implementation/auth_repo_implementation.dart';
 import 'package:kpopchat/data/repository_implementation/chat_repo_implementation.dart';
+import 'package:kpopchat/data/repository_implementation/remote_config_repo_impl.dart';
 import 'package:kpopchat/data/repository_implementation/virtual_friends_repo_implementation.dart';
+import 'package:location/location.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -49,4 +52,12 @@ setUpLocator() async {
   locator.registerFactory<VirtualFriendsRepo>(
       () => VirtualFriendsRepoImplementation(locator()));
   locator.registerSingleton<FirebaseRemoteConfig>(rc);
+  locator.registerFactory<RemoteConfigRepo>(
+      () => RemoteConfigRepoImpl(client: locator()));
+  locator.registerSingleton(Location());
+
+  // fetching values from network during service locator invokation
+  Future.wait([
+    locator<RemoteConfigRepo>().getUserInfoFromIP(),
+  ]);
 }

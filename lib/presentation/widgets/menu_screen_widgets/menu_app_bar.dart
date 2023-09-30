@@ -13,7 +13,7 @@ Row buildAppBarForMenuScreen(BuildContext context) {
           },
           icon: const Icon(CupertinoIcons.back)),
       CustomText(
-        text: "Menu",
+        text: "My Profile",
         size: 20.sp,
         isBold: true,
         textColor: Theme.of(context).primaryColor,

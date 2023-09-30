@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:kpopchat/data/models/lat_long_model.dart';
 
 class UserModel {
   String? userId;
@@ -8,6 +9,8 @@ class UserModel {
   bool? isAnonymous;
   String? photoURL;
   int? kpopScore;
+  LatLong? latLong;
+  bool? anonymizeLocation;
 
   static const String kUid = "uid";
   static const String kDisplayName = "displayName";
@@ -16,6 +19,8 @@ class UserModel {
   static const String kIsAnonymous = "isAnonymous";
   static const String kPhotoURL = "photoURL";
   static const String kScore = "score";
+  static const String kLatLong = "lat_long";
+  static const String kAnonymizeLocation = "anonymize_Location";
 
   UserModel.fromJson(Map<String, dynamic> json) {
     userId = json[kUid];
@@ -25,6 +30,8 @@ class UserModel {
     isAnonymous = json[kIsAnonymous];
     photoURL = json[kPhotoURL];
     kpopScore = json[kScore];
+    latLong = json[kLatLong];
+    anonymizeLocation = json[kAnonymizeLocation];
   }
 
   UserModel.fromFirebaseCurrentUser(User currentUser) {
@@ -45,6 +52,8 @@ class UserModel {
       kIsAnonymous: isAnonymous,
       kPhotoURL: photoURL,
       kScore: kpopScore,
+      kLatLong: latLong,
+      kAnonymizeLocation: anonymizeLocation
     };
   }
 }

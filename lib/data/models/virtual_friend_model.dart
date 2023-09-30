@@ -1,5 +1,5 @@
 import 'package:dash_chat_2/dash_chat_2.dart';
-import 'package:kpopchat/data/models/lat_ling_model.dart';
+import 'package:kpopchat/data/models/lat_long_model.dart';
 
 class VirtualFriendModel {
   String? id;

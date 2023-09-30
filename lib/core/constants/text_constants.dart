@@ -7,9 +7,9 @@ class TextConstants {
       "Oops! It seems like there was a technical hiccup. Please try again later.";
   static const String areYouSure = "Are you sure you want to";
   static const String closeAppTitle = "$areYouSure close this app?";
-  static const String logoutTitle = "$areYouSure logout?";
-  static const String logoutText = "Logout";
+  static const String logoutTitle = "$areYouSure sign out?";
+  static const String logoutText = "Sign out";
   static const String noInternetMsg =
       "Please check your internet connection and try again later.";
-  static const String writeYourMsgHint = "Write your message";
+  static const String writeYourMsgHint = "Chat about Kpop...";
 }

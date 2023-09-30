@@ -1,12 +1,20 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:kpopchat/business_logic/virtual_friends_cubit/virtual_friends_list_cubit.dart';
 import 'package:kpopchat/core/constants/color_constants.dart';
+import 'package:kpopchat/core/utils/get_geo_location_of_user.dart';
+import 'package:kpopchat/core/utils/shared_preferences_helper.dart';
+import 'package:kpopchat/data/models/lat_long_model.dart';
 import 'package:kpopchat/data/models/schema_virtual_friend_model.dart';
+import 'package:kpopchat/data/models/user_model.dart';
 import 'package:kpopchat/presentation/common_widgets/cached_circle_avatar.dart';
-import 'package:kpopchat/presentation/widgets/chat_screen_widgets/online_status_widger.dart';
+import 'package:kpopchat/presentation/common_widgets/custom_text.dart';
+import 'package:kpopchat/presentation/screens/friends_map_screen/widgets/real_user_market_widget.dart';
+import 'package:kpopchat/presentation/widgets/chat_screen_widgets/online_status_widget.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:location/location.dart';
 import 'package:popup/popup.dart';
 
 class FriendsMapScreen extends StatefulWidget {
@@ -19,65 +27,182 @@ class FriendsMapScreen extends StatefulWidget {
 class _FriendsMapScreenState extends State<FriendsMapScreen> {
   MapController friendsMapController = MapController();
   List<SchemaVirtualFriendModel>? virtualFriends;
+  ValueNotifier<List<UserModel>> realUsers = ValueNotifier<List<UserModel>>([]);
+  ValueNotifier<LatLongAndZoom?> locationOfFocusPointOnMap =
+      ValueNotifier<LatLongAndZoom?>(null);
+  ValueNotifier<bool> fetchingLocation = ValueNotifier<bool>(false);
+
+  ValueNotifier<UserModel?> loggedInUserData =
+      ValueNotifier<UserModel?>(SharedPrefsHelper.getUserProfile());
 
   @override
-  void didChangeDependencies() {
+  void initState() {
     virtualFriends = BlocProvider.of<VirtualFriendsListCubit>(context)
         .loadedSchemaOfFriends
         ?.virtualFriends;
+
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    locationOfFocusPointOnMap.value = LatLongAndZoom(
+        zoom: 2,
+        latLong: LatLong(
+            lat: virtualFriends![3].info!.latLong!.lat!,
+            long: virtualFriends![3].info!.latLong!.long!));
+    positionCameraOnMap(5);
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        child: Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(width: 3, color: Colors.grey),
-          ),
-          child: Icon(
-            Icons.people_outline,
-            size: 40,
-          ),
-        ),
-        onPressed: () {},
-        backgroundColor: Colors.transparent,
-      ),
-      body: FlutterMap(
-        options: MapOptions(
-            center: LatLng(virtualFriends![3].info!.latLong!.lat!,
-                virtualFriends![3].info!.latLong!.long!),
-            zoom: 2,
-            minZoom: 2,
-            maxZoom: 17,
-            keepAlive: true),
-        mapController: friendsMapController,
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: _buildFloatingWidgets(context),
+        body: ValueListenableBuilder(
+          valueListenable: locationOfFocusPointOnMap,
+          builder: (context, newFocusPoint, child) {
+            return Stack(
+              children: [
+                _buildMapWidget(newFocusPoint),
+                _buildLoadingOverlayWidget()
+              ],
+            );
+          },
+        ));
+  }
+
+  Container _buildFloatingWidgets(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.grey[50], borderRadius: BorderRadius.circular(4)),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          TileLayer(
-            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            userAgentPackageName: 'com.example.app',
-          ),
-          MarkerLayer(
-            markers: [
-              if (virtualFriends != null)
-                for (SchemaVirtualFriendModel friendInfo in virtualFriends!)
-                  if (friendInfo.info?.latLong != null)
-                    Marker(
-                      rotate: false,
-                      point: LatLng(friendInfo.info!.latLong!.lat!,
-                          friendInfo.info!.latLong!.long!),
-                      builder: (context) {
-                        return _buildMarker(friendInfo);
-                      },
-                    )
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: const Icon(
+                  Icons.my_location_sharp,
+                ),
+                color: Theme.of(context).primaryColor,
+                onPressed: () async {
+                  await positionCameraOnMap(20);
+                },
+              ),
+              CustomText(text: "Live"),
+              SizedBox(
+                height: 2,
+              )
             ],
-          )
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CupertinoCheckbox(value: true, onChanged: (value) {}),
+              CustomText(text: "Ghost Mode")
+            ],
+          ),
         ],
       ),
+    );
+  }
+
+  FlutterMap _buildMapWidget(LatLongAndZoom? newFocusPoint) {
+    return FlutterMap(
+      options: MapOptions(
+          interactiveFlags: InteractiveFlag.doubleTapZoom |
+              InteractiveFlag.drag |
+              InteractiveFlag.pinchMove |
+              InteractiveFlag.pinchZoom,
+          center:
+              LatLng(newFocusPoint!.latLong!.lat!, newFocusPoint.latLong!.lat!),
+          zoom: newFocusPoint.zoom!,
+          minZoom: 2,
+          maxZoom: 17,
+          keepAlive: true),
+      mapController: friendsMapController,
+      children: [
+        TileLayer(
+          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          userAgentPackageName: 'com.example.app',
+        ),
+        MarkerLayer(
+          markers: [
+            // Virtual users markers
+            if (virtualFriends != null)
+              for (SchemaVirtualFriendModel friendInfo in virtualFriends!)
+                if (friendInfo.info?.latLong != null)
+                  Marker(
+                    rotate: false,
+                    point: LatLng(friendInfo.info!.latLong!.lat!,
+                        friendInfo.info!.latLong!.long!),
+                    builder: (context) {
+                      return _buildMarker(friendInfo);
+                    },
+                  ),
+            // Real users markers
+            if (realUsers.value.isNotEmpty)
+              for (UserModel realUser in realUsers.value)
+                if (realUser.latLong != null)
+                  Marker(
+                      rotate: false,
+                      point: LatLng(
+                          realUser.latLong!.lat!, realUser.latLong!.long!),
+                      builder: (context) {
+                        return buildRealUserMarker(realUser);
+                      }),
+
+            // Logged in user marker
+            if (newFocusPoint.latLong != null)
+              Marker(
+                  rotate: false,
+                  point: LatLng(newFocusPoint.latLong!.lat!,
+                      newFocusPoint.latLong!.long!),
+                  builder: (context) {
+                    return ValueListenableBuilder(
+                      valueListenable: loggedInUserData,
+                      builder: (context, updatedUserData, child) {
+                        return buildRealUserMarker(updatedUserData!);
+                      },
+                    );
+                  })
+          ],
+        )
+      ],
+    );
+  }
+
+  Future<void> positionCameraOnMap(double zoom) async {
+    fetchingLocation.value = true;
+    LocationData? currentUserLocation = await getUserLocationData();
+    fetchingLocation.value = false;
+    if (currentUserLocation != null) {
+      locationOfFocusPointOnMap.value = LatLongAndZoom(
+          zoom: zoom,
+          latLong: LatLong(
+              lat: currentUserLocation.latitude,
+              long: currentUserLocation.longitude));
+
+      friendsMapController.move(
+        LatLng(currentUserLocation.latitude!, currentUserLocation.longitude!),
+        zoom,
+      );
+    }
+  }
+
+  ValueListenableBuilder<bool> _buildLoadingOverlayWidget() {
+    return ValueListenableBuilder(
+      valueListenable: fetchingLocation,
+      builder: (context, fetchingLoc, child) {
+        return fetchingLoc
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : const SizedBox();
+      },
     );
   }
 

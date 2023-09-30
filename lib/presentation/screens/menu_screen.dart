@@ -1,5 +1,6 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,7 +22,6 @@ import 'package:kpopchat/presentation/common_widgets/bool_bottom_sheet.dart';
 import 'package:kpopchat/presentation/common_widgets/common_widgets.dart';
 import 'package:kpopchat/presentation/common_widgets/custom_text.dart';
 import 'package:kpopchat/presentation/widgets/menu_screen_widgets/menu_app_bar.dart';
-import 'package:day_night_themed_switch/day_night_themed_switch.dart';
 import 'package:kpopchat/presentation/widgets/menu_screen_widgets/menu_list_tile.dart';
 
 class MenuScreen extends StatefulWidget {
@@ -91,32 +91,31 @@ class _MenuScreenState extends State<MenuScreen> {
             ListTile(
               leading: const Icon(Icons.color_lens_outlined),
               title: CustomText(
-                text: "Theme",
+                text: "Dark Mode",
                 isBold: true,
                 textColor: Theme.of(context).primaryColor,
               ),
               trailing: BlocBuilder<ThemeCubit, ThemeData>(
                 builder: (context, currentTheme) {
                   return Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10.h),
-                    child: DayNightSwitch(
-                        value: currentTheme == darkTheme,
-                        onChanged: (bool val) async {
-                          await AdMobServices.showInterstitialAd(
-                              switchThemeInterstitialAd, () {
-                            _loadInterstitialAd();
-                          });
-                          BlocProvider.of<ThemeCubit>(
-                                  navigatorKey.currentContext!)
-                              .changeTheme();
-                        }),
-                  );
+                      padding: EdgeInsets.symmetric(vertical: 10.h),
+                      child: CupertinoSwitch(
+                          activeColor: ColorConstants.primaryColor,
+                          value: currentTheme == darkTheme,
+                          onChanged: (bool val) async {
+                            await AdMobServices.showInterstitialAd(
+                                switchThemeInterstitialAd,
+                                () => _loadInterstitialAd());
+                            BlocProvider.of<ThemeCubit>(
+                                    navigatorKey.currentContext!)
+                                .changeTheme();
+                          }));
                 },
               ),
             ),
             const Divider(),
             CustomListTile(
-              title: "Logout",
+              title: "Sign out",
               leadingIcon: Icons.logout,
               titleColor: Theme.of(context).primaryColor,
               onTap: () async {

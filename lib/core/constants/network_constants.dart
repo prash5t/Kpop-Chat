@@ -6,4 +6,6 @@ class NetworkConstants {
 
   static const String policyUrl =
       "https://aprashantz.github.io/kpop-chat-policy/";
+
+  static const String urlForIPInfo = "http://ip-api.com/json";
 }

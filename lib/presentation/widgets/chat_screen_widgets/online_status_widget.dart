@@ -27,3 +27,29 @@ class OnlineStatusWidget extends StatelessWidget {
     );
   }
 }
+
+class RecentlyActiveWidget extends StatelessWidget {
+  const RecentlyActiveWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Color onlineStatusColor = ColorConstants.primaryColor;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CircleAvatar(
+          backgroundColor: onlineStatusColor,
+          radius: 5.r,
+        ),
+        SizedBox(width: 4.r),
+        Text(
+          "Recently Active",
+          style: TextStyle(
+            fontSize: 17.sp,
+            color: onlineStatusColor,
+          ),
+        )
+      ],
+    );
+  }
+}
