@@ -20,7 +20,11 @@ import 'package:kpopchat/presentation/widgets/virtual_friends_list_screen_widget
 
 class VirtualFriendsLoadedScreen extends StatefulWidget {
   final List<SchemaVirtualFriendModel> virtualFriends;
-  const VirtualFriendsLoadedScreen({super.key, required this.virtualFriends});
+  final ScrollController scrollController;
+  const VirtualFriendsLoadedScreen(
+      {super.key,
+      required this.virtualFriends,
+      required this.scrollController});
 
   @override
   State<VirtualFriendsLoadedScreen> createState() =>
@@ -99,6 +103,8 @@ class _VirtualFriendsLoadedScreenState
       body: virtualFriends.isEmpty
           ? const ZeroVirtualFriendsWidget()
           : ListView.builder(
+              controller: widget.scrollController,
+              key: const PageStorageKey<String>('chatPage'),
               itemCount: virtualFriends.length,
               itemBuilder: (context, index) {
                 VirtualFriendModel friendData = virtualFriends[index].info!;

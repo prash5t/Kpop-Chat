@@ -106,9 +106,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     logEventInAnalytics(AnalyticsConstants.kEventSignedIn);
                     Navigator.of(navigatorKey.currentContext!)
                         .pushNamedAndRemoveUntil(
-                            AppRoutes.dashboardScreen,
-                            // AppRoutes.virtualFriendsListScreen,
-                            (route) => false);
+                            AppRoutes.dashboardScreen, (route) => false);
                   }
                   setState(() {
                     isLoading = false;

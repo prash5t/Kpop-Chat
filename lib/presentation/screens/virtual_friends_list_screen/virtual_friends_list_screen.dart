@@ -4,10 +4,11 @@ import 'package:kpopchat/business_logic/virtual_friends_cubit/virtual_friends_li
 import 'package:kpopchat/business_logic/virtual_friends_cubit/virtual_friends_list_state.dart';
 import 'package:kpopchat/core/utils/initializer.dart';
 import 'package:kpopchat/presentation/common_widgets/custom_text.dart';
-import 'package:kpopchat/presentation/screens/virtual_friends_list/virtual_friends_loaded_screen.dart';
+import 'package:kpopchat/presentation/screens/virtual_friends_list_screen/virtual_friends_loaded_screen.dart';
 
 class VirtualFriendsListScreen extends StatefulWidget {
-  const VirtualFriendsListScreen({super.key});
+  final ScrollController scrollController;
+  const VirtualFriendsListScreen({super.key, required this.scrollController});
 
   @override
   State<VirtualFriendsListScreen> createState() =>
@@ -29,7 +30,8 @@ class _VirtualFriendsListScreenState extends State<VirtualFriendsListScreen> {
           if (state is VirtualFriendsLoadedState) {
             return VirtualFriendsLoadedScreen(
                 virtualFriends:
-                    state.localSchemaModelOfLoggedInUser.virtualFriends!);
+                    state.localSchemaModelOfLoggedInUser.virtualFriends!,
+                scrollController: widget.scrollController);
           } else if (state is ErrorLoadingVirtualFriendsState) {
             return Material(
                 child: Center(child: CustomText(text: state.errorMsg)));

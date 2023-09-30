@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kpopchat/business_logic/real_users_cubit/real_users_cubit.dart';
 import 'package:kpopchat/presentation/screens/friends_map_screen/friends_map_screen.dart';
-import 'package:kpopchat/presentation/screens/virtual_friends_list/virtual_friends_list_screen.dart';
+import 'package:kpopchat/presentation/screens/home_screen/home_screen.dart';
+import 'package:kpopchat/presentation/screens/virtual_friends_list_screen/virtual_friends_list_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -13,8 +14,10 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  ValueNotifier<int> _navAt = ValueNotifier<int>(1);
-  PageController _pageController = PageController(initialPage: 1);
+  ValueNotifier<int> _navAt = ValueNotifier<int>(0);
+  PageController _pageController = PageController(initialPage: 0);
+  final ScrollController _homeScrollController = ScrollController();
+  final ScrollController _chatScrollController = ScrollController();
 
   @override
   void initState() {
@@ -43,14 +46,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
               },
               items: [
                 const BottomNavigationBarItem(
-                    icon: Icon(CupertinoIcons.location)),
+                    icon: Icon(Icons.home), label: "Home"),
+
                 const BottomNavigationBarItem(
-                    icon: Icon(CupertinoIcons.chat_bubble_2)),
+                    icon: Icon(CupertinoIcons.chat_bubble_2), label: "Chats"),
                 const BottomNavigationBarItem(
-                    icon: Icon(Icons.camera_alt_outlined)),
-                const BottomNavigationBarItem(icon: Icon(Icons.people)),
-                const BottomNavigationBarItem(
-                    icon: Icon(CupertinoIcons.memories)),
+                    icon: Icon(CupertinoIcons.location), label: "Kpop Map"),
+
+                // const BottomNavigationBarItem(icon: Icon(Icons.people)),
+                // const BottomNavigationBarItem(
+                //     icon: Icon(CupertinoIcons.memories)),
               ]);
         },
       ),
@@ -58,7 +63,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
         physics: const AlwaysScrollableScrollPhysics(),
         controller: _pageController,
         onPageChanged: (newPage) => _navAt.value = newPage,
-        children: [FriendsMapScreen(), VirtualFriendsListScreen()],
+        children: [
+          HomeScreen(scrollController: _homeScrollController),
+          VirtualFriendsListScreen(
+            scrollController: _chatScrollController,
+          ),
+          FriendsMapScreen(),
+        ],
       ),
     );
   }
