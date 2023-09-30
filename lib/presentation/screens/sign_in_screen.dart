@@ -125,14 +125,14 @@ class _SignInScreenState extends State<SignInScreen> {
               width: 200,
             ),
           ),
-          Positioned(
-            top: -120,
-            left: 200,
-            child: Image.asset(
-              AssetPathConstants.kWaitingDogGIF,
-              width: 180,
-            ),
-          ),
+          // Positioned(
+          //   top: -120,
+          //   left: 200,
+          //   child: Image.asset(
+          //     AssetPathConstants.kWaitingDogGIF,
+          //     width: 180,
+          //   ),
+          // ),
         ])
       ]),
     );

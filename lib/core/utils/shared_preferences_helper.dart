@@ -12,7 +12,7 @@ class SharedPrefsHelper {
     locator<SharedPreferences>().remove(SharedPrefsKeys.kUserProfile);
   }
 
-  static void saveUserProfile(User? userToSave) {
+  static void saveUserProfileFromLogin(User? userToSave) {
     if (userToSave != null) {
       Map<String, dynamic> userData =
           UserModel.fromFirebaseCurrentUser(userToSave).toJson();

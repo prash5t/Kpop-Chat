@@ -1,6 +1,8 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:kpopchat/core/constants/asset_path_constants.dart';
+import 'package:kpopchat/core/constants/analytics_constants.dart';
 import 'package:kpopchat/core/constants/color_constants.dart';
+import 'package:kpopchat/core/utils/analytics.dart';
 import 'package:kpopchat/data/models/user_model.dart';
 import 'package:kpopchat/presentation/common_widgets/cached_circle_avatar.dart';
 import 'package:kpopchat/presentation/widgets/chat_screen_widgets/online_status_widget.dart';
@@ -12,15 +14,14 @@ Container _buildMarkerWidget(UserModel realUser) {
       shape: BoxShape.circle,
       border: Border.all(width: 3, color: ColorConstants.primaryColorPink),
     ),
-    child: realUser.anonymizeLocation ?? false
-        ? CircleAvatar(
-            backgroundImage: AssetImage(AssetPathConstants.kDefaultProfilePic),
-            radius: 100,
-          )
-        : CachedCircleAvatar(
-            imageUrl: realUser.photoURL!,
-            radius: 100,
-          ),
+    child: ImageFiltered(
+      imageFilter: ImageFilter.blur(sigmaY: 2, sigmaX: 2),
+      enabled: realUser.anonymizeLocation ?? true,
+      child: CachedCircleAvatar(
+        imageUrl: realUser.photoURL!,
+        radius: 100,
+      ),
+    ),
   );
 }
 
@@ -28,6 +29,7 @@ Builder buildRealUserMarker(UserModel realUser) {
   return Builder(builder: (context) {
     return GestureDetector(
       onTap: () {
+        logEventInAnalytics(AnalyticsConstants.kClickedRealUserMapMarker);
         showPopup(
             arrowColor: Colors.white,
             barrierColor: Colors.transparent,
@@ -40,12 +42,11 @@ Builder buildRealUserMarker(UserModel realUser) {
                 height: 50,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(6),
-                  // color: Colors.transparent,
                 ),
                 padding: const EdgeInsets.all(4),
                 child: Column(
                   children: [
-                    Text(realUser.anonymizeLocation ?? false
+                    Text(realUser.anonymizeLocation ?? true
                         ? "Anonymous"
                         : realUser.displayName!),
                     RecentlyActiveWidget()

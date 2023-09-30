@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:kpopchat/business_logic/chat_cubit/chat_cubit.dart';
 import 'package:kpopchat/business_logic/internet_checker_cubit.dart';
+import 'package:kpopchat/business_logic/real_users_cubit/real_users_cubit.dart';
 import 'package:kpopchat/business_logic/virtual_friends_cubit/virtual_friends_list_cubit.dart';
 import 'package:kpopchat/core/routes/app_routes.dart';
 import 'package:kpopchat/business_logic/theme_cubit.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => AuthCheckerCubit()),
           BlocProvider(create: (context) => ThemeCubit()),
           BlocProvider(create: (context) => VirtualFriendsListCubit(locator())),
+          BlocProvider(create: (context) => RealUsersCubit(locator())),
           BlocProvider(create: (context) => ChatCubit(locator())),
           BlocProvider(
               create: (context) => InternetConnectivityCubit(

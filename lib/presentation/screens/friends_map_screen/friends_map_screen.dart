@@ -2,13 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:kpopchat/business_logic/real_users_cubit/real_users_cubit.dart';
 import 'package:kpopchat/business_logic/virtual_friends_cubit/virtual_friends_list_cubit.dart';
+import 'package:kpopchat/core/constants/analytics_constants.dart';
 import 'package:kpopchat/core/constants/color_constants.dart';
+import 'package:kpopchat/core/utils/analytics.dart';
 import 'package:kpopchat/core/utils/get_geo_location_of_user.dart';
+import 'package:kpopchat/core/utils/service_locator.dart';
 import 'package:kpopchat/core/utils/shared_preferences_helper.dart';
 import 'package:kpopchat/data/models/lat_long_model.dart';
 import 'package:kpopchat/data/models/schema_virtual_friend_model.dart';
 import 'package:kpopchat/data/models/user_model.dart';
+import 'package:kpopchat/data/repository/real_users_repo.dart';
 import 'package:kpopchat/presentation/common_widgets/cached_circle_avatar.dart';
 import 'package:kpopchat/presentation/common_widgets/custom_text.dart';
 import 'package:kpopchat/presentation/screens/friends_map_screen/widgets/real_user_market_widget.dart';
@@ -41,6 +46,8 @@ class _FriendsMapScreenState extends State<FriendsMapScreen> {
         .loadedSchemaOfFriends
         ?.virtualFriends;
 
+    realUsers.value = BlocProvider.of<RealUsersCubit>(context).loadedRealUsers;
+
     super.initState();
   }
 
@@ -51,14 +58,13 @@ class _FriendsMapScreenState extends State<FriendsMapScreen> {
         latLong: LatLong(
             lat: virtualFriends![3].info!.latLong!.lat!,
             long: virtualFriends![3].info!.latLong!.long!));
-    positionCameraOnMap(5);
+    positionCameraOnMap(3);
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: _buildFloatingWidgets(context),
         body: ValueListenableBuilder(
           valueListenable: locationOfFocusPointOnMap,
@@ -76,7 +82,8 @@ class _FriendsMapScreenState extends State<FriendsMapScreen> {
   Container _buildFloatingWidgets(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: Colors.grey[50], borderRadius: BorderRadius.circular(4)),
+          color: Theme.of(context).colorScheme.onSecondary,
+          borderRadius: BorderRadius.circular(4)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -89,6 +96,8 @@ class _FriendsMapScreenState extends State<FriendsMapScreen> {
                 ),
                 color: Theme.of(context).primaryColor,
                 onPressed: () async {
+                  logEventInAnalytics(
+                      AnalyticsConstants.kClickedPreciseLocation);
                   await positionCameraOnMap(20);
                 },
               ),
@@ -101,7 +110,21 @@ class _FriendsMapScreenState extends State<FriendsMapScreen> {
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CupertinoCheckbox(value: true, onChanged: (value) {}),
+              ValueListenableBuilder(
+                valueListenable: loggedInUserData,
+                builder: (context, updatedUserData, child) {
+                  return CupertinoCheckbox(
+                      value: updatedUserData?.anonymizeLocation ?? true,
+                      onChanged: (value) async {
+                        logEventInAnalytics(
+                            AnalyticsConstants.kClickedGhostMode);
+                        loggedInUserData.value!.anonymizeLocation = value;
+                        await positionCameraOnMap(20);
+                        // TODO: replace setstate
+                        setState(() {});
+                      });
+                },
+              ),
               CustomText(text: "Ghost Mode")
             ],
           ),
@@ -180,6 +203,9 @@ class _FriendsMapScreenState extends State<FriendsMapScreen> {
     LocationData? currentUserLocation = await getUserLocationData();
     fetchingLocation.value = false;
     if (currentUserLocation != null) {
+      loggedInUserData.value?.latLong = LatLong(
+          lat: currentUserLocation.latitude,
+          long: currentUserLocation.longitude);
       locationOfFocusPointOnMap.value = LatLongAndZoom(
           zoom: zoom,
           latLong: LatLong(
@@ -190,6 +216,8 @@ class _FriendsMapScreenState extends State<FriendsMapScreen> {
         LatLng(currentUserLocation.latitude!, currentUserLocation.longitude!),
         zoom,
       );
+      await locator<RealUsersRepo>()
+          .updateUserLocationAndGhostModeStatus(loggedInUserData.value!);
     }
   }
 
@@ -223,6 +251,8 @@ class _FriendsMapScreenState extends State<FriendsMapScreen> {
     return Builder(builder: (context) {
       return GestureDetector(
         onTap: () {
+          logEventInAnalytics(
+              AnalyticsConstants.kClickedVirtualFriendMapMarker);
           showPopup(
               arrowColor: Colors.white,
               barrierColor: Colors.transparent,

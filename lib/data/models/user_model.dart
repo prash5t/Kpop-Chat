@@ -11,6 +11,7 @@ class UserModel {
   int? kpopScore;
   LatLong? latLong;
   bool? anonymizeLocation;
+  // DateTime? dateJoined;
 
   static const String kUid = "uid";
   static const String kDisplayName = "displayName";
@@ -20,7 +21,8 @@ class UserModel {
   static const String kPhotoURL = "photoURL";
   static const String kScore = "score";
   static const String kLatLong = "lat_long";
-  static const String kAnonymizeLocation = "anonymize_Location";
+  static const String kAnonymizeLocation = "anonymize_location";
+  // static const String kDateJoined = "date_joined";
 
   UserModel.fromJson(Map<String, dynamic> json) {
     userId = json[kUid];
@@ -30,8 +32,17 @@ class UserModel {
     isAnonymous = json[kIsAnonymous];
     photoURL = json[kPhotoURL];
     kpopScore = json[kScore];
-    latLong = json[kLatLong];
-    anonymizeLocation = json[kAnonymizeLocation];
+    if (json[kLatLong] != null && json[kLatLong] != "null") {
+      latLong = LatLong.fromJson(json[kLatLong]);
+    }
+    anonymizeLocation = json[kAnonymizeLocation] ?? true;
+    // try {
+    //   dateJoined = json[kDateJoined] == null
+    //       ? DateTime.now()
+    //       : DateTime.parse(json[kDateJoined]);
+    // } catch (e) {
+    //   debugPrint("Error parsing date ${e}");
+    // }
   }
 
   UserModel.fromFirebaseCurrentUser(User currentUser) {
@@ -52,8 +63,9 @@ class UserModel {
       kIsAnonymous: isAnonymous,
       kPhotoURL: photoURL,
       kScore: kpopScore,
-      kLatLong: latLong,
-      kAnonymizeLocation: anonymizeLocation
+      kLatLong: latLong?.toJson(),
+      kAnonymizeLocation: anonymizeLocation,
+      // if (dateJoined != null) kDateJoined: dateJoined.toString(),
     };
   }
 }

@@ -43,7 +43,7 @@ class RecentlyActiveWidget extends StatelessWidget {
         ),
         SizedBox(width: 4.r),
         Text(
-          "Recently Active",
+          "Recently Joined",
           style: TextStyle(
             fontSize: 17.sp,
             color: onlineStatusColor,

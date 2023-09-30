@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kpopchat/business_logic/real_users_cubit/real_users_cubit.dart';
 import 'package:kpopchat/presentation/screens/friends_map_screen/friends_map_screen.dart';
 import 'package:kpopchat/presentation/screens/virtual_friends_list/virtual_friends_list_screen.dart';
 
@@ -13,6 +15,12 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   ValueNotifier<int> _navAt = ValueNotifier<int>(1);
   PageController _pageController = PageController(initialPage: 1);
+
+  @override
+  void initState() {
+    BlocProvider.of<RealUsersCubit>(context).fetchRealUsers();
+    super.initState();
+  }
 
   @override
   void dispose() {

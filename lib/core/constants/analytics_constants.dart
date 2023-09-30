@@ -11,6 +11,12 @@ class AnalyticsConstants {
   static const String kPropertyRewardsEarned = "rewards_earned";
   static const String kPropertyEdenAiCreditSpent = "edenai_credit_spent";
 
+  /// maps analytics constats
+  static const String kClickedPreciseLocation = "precise_location_clicked";
+  static const String kClickedGhostMode = "ghost_mode_clicked";
+  static const String kClickedVirtualFriendMapMarker =
+      "vitual_friend_marker_clicked";
+  static const String kClickedRealUserMapMarker = "real_user_marker_clicked";
   // below is ad events and properties
   static const String kEventBannerAdLoaded = "banner_ad_loaded";
   static const String kEventBannerAdOpened = "banner_ad_opened";
