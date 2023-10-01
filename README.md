@@ -1,6 +1,6 @@
 # Kpop Chat
 
-To say: Mobile app that connects user with AI Kpop fans to chat about Kpop related stuffs and share common interests.
+Mobile app that connects user with AI Kpop fans to chat about Kpop related stuffs and share common interests.
 
 ##### Used services:
 
