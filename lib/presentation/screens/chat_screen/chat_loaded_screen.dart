@@ -10,6 +10,7 @@ import 'package:kpopchat/core/constants/google_ads_id.dart';
 import 'package:kpopchat/core/constants/text_constants.dart';
 import 'package:kpopchat/core/utils/admob_services.dart';
 import 'package:kpopchat/core/utils/analytics.dart';
+import 'package:kpopchat/core/utils/service_locator.dart';
 import 'package:kpopchat/core/utils/shared_preferences_helper.dart';
 import 'package:kpopchat/data/models/virtual_friend_model.dart';
 import 'package:kpopchat/data/repository/data_filter_repo.dart';
@@ -38,9 +39,6 @@ class _ChatLoadedScreenState extends State<ChatLoadedScreen> {
   ValueNotifier<InterstitialAd?> msgInterstitialAd =
       ValueNotifier<InterstitialAd?>(null);
   TextEditingController userMsgTextFieldController = TextEditingController();
-
-  // DataFilterRepo class is gitignored
-  DataFilterRepo filterRepo = DataFilterRepo();
 
   @override
   void initState() {
@@ -105,7 +103,7 @@ class _ChatLoadedScreenState extends State<ChatLoadedScreen> {
                 await BlocProvider.of<InternetConnectivityCubit>(context)
                     .isInternetConnected();
             if (internetAvailable) {
-              filterRepo.filterChat(userNewMsg.text);
+              locator<DataFilterRepo>().filterChat(userNewMsg.text);
               _showChatInterstitialAd();
               increasePropertyCount(AnalyticsConstants.kProperyMsgSentCount, 1);
               BlocProvider.of<ChatCubit>(navigatorKey.currentContext!)

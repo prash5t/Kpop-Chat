@@ -115,13 +115,13 @@ class _VirtualFriendProfileScreenState
                       child: Container(
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: ColorConstants.primaryColor),
+                              color: Theme.of(context).primaryColor),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Icon(
                               CupertinoIcons.down_arrow,
                               size: 30,
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.background,
                             ),
                           )),
                     ),

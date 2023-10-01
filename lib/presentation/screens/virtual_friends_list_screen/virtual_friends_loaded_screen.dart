@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:kpopchat/business_logic/virtual_friends_cubit/virtual_friends_list_cubit.dart';
+import 'package:kpopchat/business_logic/virtual_friends_list_cubit/virtual_friends_list_cubit.dart';
 import 'package:kpopchat/core/constants/analytics_constants.dart';
 import 'package:kpopchat/core/constants/google_ads_id.dart';
 import 'package:kpopchat/core/routes/app_routes.dart';

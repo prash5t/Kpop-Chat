@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -68,13 +67,12 @@ final lightTheme = ThemeData(
     )),
     appBarTheme: AppBarTheme(
       elevation: 0,
-      backgroundColor: Colors.white,
-      systemOverlayStyle: Platform.isIOS
-          ? SystemUiOverlayStyle.dark
-          : const SystemUiOverlayStyle(
-              statusBarColor: Colors.grey,
-              statusBarIconBrightness: Brightness.dark,
-            ),
+      backgroundColor: Colors.grey,
+      systemOverlayStyle: SystemUiOverlayStyle(
+        // statusBarBrightness: Brightness.light,
+        statusBarColor: Colors.grey,
+        statusBarIconBrightness: Brightness.dark,
+      ),
       titleTextStyle: TextStyle(
         color: Colors.black,
         fontSize: 15.sp,

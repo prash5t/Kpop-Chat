@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kpopchat/business_logic/virtual_friends_cubit/virtual_friends_list_state.dart';
+import 'package:kpopchat/business_logic/virtual_friends_list_cubit/virtual_friends_list_state.dart';
 import 'package:kpopchat/core/constants/text_constants.dart';
 import 'package:kpopchat/core/network/failure_model.dart';
 import 'package:kpopchat/data/models/local_schema_model.dart';

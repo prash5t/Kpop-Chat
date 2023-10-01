@@ -7,26 +7,32 @@ import 'package:kpopchat/core/utils/analytics.dart';
 import 'package:kpopchat/presentation/common_widgets/common_widgets.dart';
 import 'package:kpopchat/presentation/common_widgets/custom_text.dart';
 
-PreferredSize conversationsScreenAppBar(BuildContext context) {
+PreferredSize conversationsScreenAppBar(BuildContext context,
+    {bool isForPostsScreen = false}) {
   return CommonWidgets.customAppBar(
     context,
-    Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        buildMenuButton(context),
-        CustomText(
-            text: TextConstants.appName,
-            textColor: Theme.of(context).primaryColor,
-            size: 20.sp,
-            isBold: true),
-        const SizedBox()
-        // IconButton(
-        //     onPressed: () {
-        //       // BlocProvider.of<VirtualFriendsListCubit>(context)
-        //       //     .createVirtualFriend();
-        //     },
-        //     icon: const Icon(Icons.create))
-      ],
+    Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          CustomText(
+              text: isForPostsScreen
+                  ? "@Kpop Posts"
+                  : "@" + TextConstants.appName,
+              textColor: Theme.of(context).primaryColor,
+              size: 20.sp,
+              isBold: true),
+          buildMenuButton(context),
+
+          // IconButton(
+          //     onPressed: () {
+          //       // BlocProvider.of<VirtualFriendsListCubit>(context)
+          //       //     .createVirtualFriend();
+          //     },
+          //     icon: const Icon(Icons.create))
+        ],
+      ),
     ),
   );
 }

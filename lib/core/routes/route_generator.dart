@@ -19,7 +19,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
     case AppRoutes.dashboardScreen:
       return CupertinoPageRoute(builder: (context) => const DashboardScreen());
     case AppRoutes.menuScreen:
-      return pageRouteBuilder(screen: const MenuScreen());
+      return CupertinoPageRoute(builder: (context) => const MenuScreen());
     case AppRoutes.chatScreen:
       return CupertinoPageRoute(
           builder: (context) =>

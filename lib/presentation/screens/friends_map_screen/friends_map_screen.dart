@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:kpopchat/business_logic/real_users_cubit/real_users_cubit.dart';
-import 'package:kpopchat/business_logic/virtual_friends_cubit/virtual_friends_list_cubit.dart';
+import 'package:kpopchat/business_logic/virtual_friends_list_cubit/virtual_friends_list_cubit.dart';
 import 'package:kpopchat/core/constants/analytics_constants.dart';
 import 'package:kpopchat/core/constants/color_constants.dart';
 import 'package:kpopchat/core/utils/analytics.dart';

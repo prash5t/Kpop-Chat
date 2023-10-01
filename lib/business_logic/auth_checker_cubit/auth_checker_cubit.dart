@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:kpopchat/business_logic/virtual_friends_cubit/virtual_friends_list_cubit.dart';
+import 'package:kpopchat/business_logic/virtual_friends_list_cubit/virtual_friends_list_cubit.dart';
 import 'package:kpopchat/core/routes/app_routes.dart';
 import 'package:kpopchat/core/utils/service_locator.dart';
 import 'package:kpopchat/core/utils/shared_preferences_helper.dart';

@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kpopchat/business_logic/real_users_cubit/real_users_cubit.dart';
+import 'package:kpopchat/business_logic/virtual_friends_list_cubit/virtual_friends_list_cubit.dart';
+import 'package:kpopchat/business_logic/virtual_friends_posts_cubit/virtual_friends_posts_cubit.dart';
+import 'package:kpopchat/core/utils/initializer.dart';
 import 'package:kpopchat/presentation/screens/friends_map_screen/friends_map_screen.dart';
 import 'package:kpopchat/presentation/screens/home_screen/home_screen.dart';
 import 'package:kpopchat/presentation/screens/virtual_friends_list_screen/virtual_friends_list_screen.dart';
@@ -14,13 +17,16 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  ValueNotifier<int> _navAt = ValueNotifier<int>(0);
-  PageController _pageController = PageController(initialPage: 0);
+  ValueNotifier<int> _navAt = ValueNotifier<int>(1);
+  PageController _pageController = PageController(initialPage: 1);
   final ScrollController _homeScrollController = ScrollController();
   final ScrollController _chatScrollController = ScrollController();
 
   @override
   void initState() {
+    RequiredInitializations.initializeFirebaseRemoteConfig();
+    BlocProvider.of<VirtualFriendsPostsCubit>(context).fetchPosts();
+    BlocProvider.of<VirtualFriendsListCubit>(context).getVirtualFriends();
     BlocProvider.of<RealUsersCubit>(context).fetchRealUsers();
     super.initState();
   }
@@ -46,7 +52,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               },
               items: [
                 const BottomNavigationBarItem(
-                    icon: Icon(Icons.home), label: "Home"),
+                    icon: Icon(CupertinoIcons.globe), label: "Posts"),
 
                 const BottomNavigationBarItem(
                     icon: Icon(CupertinoIcons.chat_bubble_2), label: "Chats"),
@@ -60,7 +66,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         },
       ),
       body: PageView(
-        physics: const AlwaysScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         controller: _pageController,
         onPageChanged: (newPage) => _navAt.value = newPage,
         children: [

@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,12 +25,10 @@ final darkTheme = ThemeData(
   appBarTheme: AppBarTheme(
     elevation: 0,
     backgroundColor: Colors.grey[800],
-    systemOverlayStyle: Platform.isIOS
-        ? SystemUiOverlayStyle.light
-        : const SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.light,
-          ),
+    systemOverlayStyle: SystemUiOverlayStyle(
+      statusBarColor: Colors.black,
+      statusBarIconBrightness: Brightness.light,
+    ),
     titleTextStyle: TextStyle(
       color: Colors.white,
       fontSize: 15.sp,

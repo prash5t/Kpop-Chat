@@ -6,7 +6,8 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:kpopchat/business_logic/chat_cubit/chat_cubit.dart';
 import 'package:kpopchat/business_logic/internet_checker_cubit.dart';
 import 'package:kpopchat/business_logic/real_users_cubit/real_users_cubit.dart';
-import 'package:kpopchat/business_logic/virtual_friends_cubit/virtual_friends_list_cubit.dart';
+import 'package:kpopchat/business_logic/virtual_friends_list_cubit/virtual_friends_list_cubit.dart';
+import 'package:kpopchat/business_logic/virtual_friends_posts_cubit/virtual_friends_posts_cubit.dart';
 import 'package:kpopchat/core/routes/app_routes.dart';
 import 'package:kpopchat/business_logic/theme_cubit.dart';
 import 'package:kpopchat/business_logic/auth_checker_cubit/auth_checker_cubit.dart';
@@ -36,6 +37,8 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(create: (context) => AuthCheckerCubit()),
           BlocProvider(create: (context) => ThemeCubit()),
+          BlocProvider(
+              create: (context) => VirtualFriendsPostsCubit(locator())),
           BlocProvider(create: (context) => VirtualFriendsListCubit(locator())),
           BlocProvider(create: (context) => RealUsersCubit(locator())),
           BlocProvider(create: (context) => ChatCubit(locator())),

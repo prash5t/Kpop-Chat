@@ -7,6 +7,7 @@ import 'package:kpopchat/core/utils/schema_helper.dart';
 import 'package:kpopchat/data/models/local_schema_model.dart';
 import 'package:kpopchat/data/models/schema_virtual_friend_model.dart';
 import 'package:kpopchat/data/models/virtual_friend_model.dart';
+import 'package:kpopchat/data/models/virtual_friend_post_model.dart';
 import 'package:kpopchat/data/repository/virtual_friends_repo.dart';
 import 'package:uuid/uuid.dart';
 
@@ -68,6 +69,28 @@ class VirtualFriendsRepoImplementation implements VirtualFriendsRepo {
       return Right(FailureModel(
           message:
               "Sorry, your virtual friends are not available at the moment."));
+    }
+  }
+
+  @override
+  Future<Either<List<VirtualFriendPostModel>, FailureModel>>
+      getVirtualFriendsPosts() async {
+    try {
+      List<VirtualFriendPostModel> posts = [];
+      QuerySnapshot postsSnapshot = await firestore
+          .collection(FirestoreCollections.kVirtualFriendsPosts)
+          .orderBy(VirtualFriendPostModel.kDatePublished, descending: true)
+          .get();
+      for (DocumentSnapshot post in postsSnapshot.docs) {
+        VirtualFriendPostModel postData = VirtualFriendPostModel.fromJson(
+            post.data() as Map<String, dynamic>);
+        posts.add(postData);
+      }
+      return Left(posts);
+    } catch (e) {
+      debugPrint("Error fetching posts: ${e.toString()}");
+      return Right(FailureModel(
+          message: "Sorry, Could not fetch Kpop Fans posts at the moment."));
     }
   }
 }

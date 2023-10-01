@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kpopchat/business_logic/virtual_friends_cubit/virtual_friends_list_cubit.dart';
-import 'package:kpopchat/business_logic/virtual_friends_cubit/virtual_friends_list_state.dart';
-import 'package:kpopchat/core/utils/initializer.dart';
+import 'package:kpopchat/business_logic/virtual_friends_list_cubit/virtual_friends_list_cubit.dart';
+import 'package:kpopchat/business_logic/virtual_friends_list_cubit/virtual_friends_list_state.dart';
 import 'package:kpopchat/presentation/common_widgets/custom_text.dart';
 import 'package:kpopchat/presentation/screens/virtual_friends_list_screen/virtual_friends_loaded_screen.dart';
 
@@ -16,13 +15,6 @@ class VirtualFriendsListScreen extends StatefulWidget {
 }
 
 class _VirtualFriendsListScreenState extends State<VirtualFriendsListScreen> {
-  @override
-  void initState() {
-    BlocProvider.of<VirtualFriendsListCubit>(context).getVirtualFriends();
-    RequiredInitializations.initializeFirebaseRemoteConfig();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<VirtualFriendsListCubit, VirtualFriendsListState>(

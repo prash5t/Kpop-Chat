@@ -14,6 +14,7 @@ import 'package:kpopchat/core/network/client/base_client_impl.dart';
 import 'package:kpopchat/core/utils/schema_helper.dart';
 import 'package:kpopchat/data/repository/auth_repo.dart';
 import 'package:kpopchat/data/repository/chat_repo.dart';
+import 'package:kpopchat/data/repository/data_filter_repo.dart';
 import 'package:kpopchat/data/repository/real_users_repo.dart';
 import 'package:kpopchat/data/repository/remote_config_repo.dart';
 import 'package:kpopchat/data/repository/virtual_friends_repo.dart';
@@ -59,6 +60,7 @@ setUpLocator() async {
   locator.registerFactory<RemoteConfigRepo>(
       () => RemoteConfigRepoImpl(client: locator()));
   locator.registerSingleton(Location());
+  locator.registerSingleton(DataFilterRepo());
 
   // fetching values from network during service locator invokation
   Future.wait([

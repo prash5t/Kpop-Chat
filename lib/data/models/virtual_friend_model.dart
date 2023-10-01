@@ -50,7 +50,9 @@ class VirtualFriendModel {
     lastUnlockedTime = json[kLastUnlockedTime];
     hobbies = json[kHobbies];
     age = json[kAge];
-    latLong = LatLong.fromJson(json[kLatLong]);
+    if (json[kLatLong] != null) {
+      latLong = LatLong.fromJson(json[kLatLong]);
+    }
   }
 
   Map<String, dynamic> toJson() {

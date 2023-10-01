@@ -12,4 +12,5 @@ class TextConstants {
   static const String noInternetMsg =
       "Please check your internet connection and try again later.";
   static const String writeYourMsgHint = "Chat about Kpop...";
+  static const String reportPostTitle = "Report this Kpop Fan's post?";
 }
