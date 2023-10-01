@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:kpopchat/admin_controls/admin_post_monitor.dart';
 import 'package:kpopchat/data/models/virtual_friend_model.dart';
 import 'package:kpopchat/presentation/screens/auth_checker_screen.dart';
 import 'package:kpopchat/presentation/screens/chat_screen/chat_screen.dart';
@@ -28,6 +29,9 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       return CupertinoPageRoute(
           builder: (context) => VirtualFriendProfileScreen(
               friendInfo: argument as VirtualFriendModel));
+    // FYI AdminPostMonitorScreen is gitignored
+    case AppRoutes.adminPostMonitorScreen:
+      return CupertinoPageRoute(builder: (context) => AdminPostMonitorScreen());
     default:
       return CupertinoPageRoute(builder: (context) => const SignInScreen());
   }

@@ -1,15 +1,10 @@
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kpopchat/business_logic/chat_cubit/chat_cubit.dart';
-import 'package:kpopchat/core/constants/google_ads_id.dart';
-import 'package:kpopchat/core/utils/admob_services.dart';
 import 'package:kpopchat/core/utils/shared_preferences_helper.dart';
 import 'package:kpopchat/data/models/virtual_friend_model.dart';
 import 'package:kpopchat/main.dart';
-import 'package:kpopchat/presentation/common_widgets/common_widgets.dart';
 import 'package:kpopchat/presentation/screens/chat_screen/chat_loaded_screen.dart';
 import 'package:kpopchat/presentation/widgets/chat_screen_widgets/chat_screen_app_bar.dart';
 
@@ -22,7 +17,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  ValueNotifier<BannerAd?> chatScreenBannerAd = ValueNotifier<BannerAd?>(null);
+  // ValueNotifier<BannerAd?> chatScreenBannerAd = ValueNotifier<BannerAd?>(null);
   ChatCubit chatCubit =
       BlocProvider.of<ChatCubit>(navigatorKey.currentContext!);
   @override
@@ -30,19 +25,19 @@ class _ChatScreenState extends State<ChatScreen> {
     // when chat screen is opened, we set chat screen open as true
     chatCubit.chatScreenOpen[widget.virtualFriend.id!] = true;
     chatCubit.loadChatHistory(widget.virtualFriend);
-    _loadBannerAd();
+    // _loadBannerAd();
     super.initState();
   }
 
-  void _loadBannerAd() async {
-    chatScreenBannerAd.value = await AdMobServices.getBannerAdByGivingAdId(
-        GoogleAdId.chatScreenBannerAdId)
-      ..load();
-  }
+  // void _loadBannerAd() async {
+  //   chatScreenBannerAd.value = await AdMobServices.getBannerAdByGivingAdId(
+  //       GoogleAdId.chatScreenBannerAdId)
+  //     ..load();
+  // }
 
   @override
   void dispose() {
-    chatScreenBannerAd.value?.dispose();
+    // chatScreenBannerAd.value?.dispose();
     // when chat screen is disposed, we set chat screen open as false
     chatCubit.chatScreenOpen[widget.virtualFriend.id!] = false;
     super.dispose();
@@ -55,16 +50,16 @@ class _ChatScreenState extends State<ChatScreen> {
         ChatUser(id: SharedPrefsHelper.getUserProfile()?.userId ?? "");
     return Scaffold(
       appBar: chatScreenAppBar(context, virtualFriend),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
-      floatingActionButton: ValueListenableBuilder(
-        valueListenable: chatScreenBannerAd,
-        builder: (context, value, child) {
-          return Padding(
-            padding: EdgeInsets.only(top: 40.h),
-            child: CommonWidgets.buildBannerAd(value),
-          );
-        },
-      ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
+      // floatingActionButton: ValueListenableBuilder(
+      //   valueListenable: chatScreenBannerAd,
+      //   builder: (context, value, child) {
+      //     return Padding(
+      //       padding: EdgeInsets.only(top: 40.h),
+      //       child: CommonWidgets.buildBannerAd(value),
+      //     );
+      //   },
+      // ),
       body: BlocBuilder<ChatCubit, ChatState>(
         builder: (context, state) {
           if (state is ChatLoadedState) {

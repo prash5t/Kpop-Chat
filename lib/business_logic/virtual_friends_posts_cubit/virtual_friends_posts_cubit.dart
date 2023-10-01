@@ -8,6 +8,7 @@ class VirtualFriendsPostsCubit extends Cubit<VirtualFriendsPostsState> {
   VirtualFriendsPostsCubit(this.friendsRepo) : super(InitialPostsState());
 
   void fetchPosts() async {
+    emit(InitialPostsState());
     final response = await friendsRepo.getVirtualFriendsPosts();
     response.fold((l) {
       emit(PostsLoadedState(loadedPosts: l));

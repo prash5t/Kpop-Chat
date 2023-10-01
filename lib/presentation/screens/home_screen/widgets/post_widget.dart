@@ -18,8 +18,22 @@ class VirtualFriendPostWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [_buildPosterInfoWidget(context), _buildPostWidget()],
+    return InkWell(
+      onLongPress: () async {
+        bool shouldReportPost = await booleanBottomSheet(
+              context: context,
+              titleText: TextConstants.reportPostTitle,
+              boolTrueText: "Report",
+            ) ??
+            false;
+        if (shouldReportPost) {
+          locator<DataFilterRepo>().reportPost(postData);
+          CommonWidgets.customFlushBar(context, "Reported!");
+        }
+      },
+      child: Column(
+        children: [_buildPosterInfoWidget(context), _buildPostWidget()],
+      ),
     );
   }
 
@@ -70,6 +84,7 @@ class VirtualFriendPostWidget extends StatelessWidget {
           isBold: true,
         ),
       ),
+      subtitle: Text(postData.poster?.profession ?? ""),
       trailing: IconButton(
           onPressed: () async {
             bool shouldReportPost = await booleanBottomSheet(

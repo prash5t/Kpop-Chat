@@ -52,3 +52,4 @@ app.*.map.json
 .env
 .vscode/
 /lib/data/repository/data_filter_repo.dart
+/lib/admin_controls/

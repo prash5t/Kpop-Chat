@@ -7,6 +7,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:kpopchat/admin_controls/admin_repo.dart';
 import 'package:kpopchat/core/constants/env_keys_constants.dart';
 import 'package:kpopchat/core/firebase/firebase_options.dart';
 import 'package:kpopchat/core/network/client/base_client.dart';
@@ -61,6 +62,7 @@ setUpLocator() async {
       () => RemoteConfigRepoImpl(client: locator()));
   locator.registerSingleton(Location());
   locator.registerSingleton(DataFilterRepo());
+  locator.registerSingleton(AdminRepo(locator()));
 
   // fetching values from network during service locator invokation
   Future.wait([

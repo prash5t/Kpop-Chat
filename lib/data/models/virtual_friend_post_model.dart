@@ -8,7 +8,11 @@ class VirtualFriendPostModel {
   int? viewsCount;
 
   VirtualFriendPostModel(
-      {this.postId, this.datePublished, this.poster, this.caption});
+      {this.postId,
+      this.datePublished,
+      this.poster,
+      this.caption,
+      this.viewsCount});
 
   static const String kDatePublished = "date_published";
   static const String kPostId = "post_id";

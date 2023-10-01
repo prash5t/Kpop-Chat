@@ -6,4 +6,5 @@ class AppRoutes {
   static const String chatScreen = "/chat-screen";
   static const String friendProfileScreen = "/friend-profile-screen";
   static const String menuScreen = "/menu-screen";
+  static const String adminPostMonitorScreen = "/admin-post-monitor-screen";
 }

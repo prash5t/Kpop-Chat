@@ -24,10 +24,9 @@ class ChatCubit extends Cubit<ChatState> {
 
   /// this property to be used to show interstitial ad
   /// after sending three messages, we are targeting to show  interstitial ad to user
-  /// Initializing it with 6 so that every time user sents first msg after opening app, we show ad first
   /// After showing ad, need to reset this to zero, and increase by 1 evertime user sends a msg
   /// again when it reaches 6, we show ad
-  int messagesSent = RemoteConfigValues.msgsToAllowAfterShowingOneAd;
+  int messagesSent = 0;
   int limit = RemoteConfigValues.msgsToAllowAfterShowingOneAd;
   bool shouldShowChatInterstitialAd() {
     messagesSent += 1;

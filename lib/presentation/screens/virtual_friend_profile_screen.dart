@@ -7,7 +7,6 @@ import 'package:kpopchat/core/constants/google_ads_id.dart';
 import 'package:kpopchat/core/utils/admob_services.dart';
 import 'package:kpopchat/data/models/virtual_friend_model.dart';
 import 'package:kpopchat/presentation/common_widgets/cached_image_widget.dart';
-import 'package:kpopchat/presentation/common_widgets/common_widgets.dart';
 import 'package:kpopchat/presentation/common_widgets/custom_text.dart';
 import 'package:simple_tags/simple_tags.dart';
 
@@ -22,8 +21,8 @@ class VirtualFriendProfileScreen extends StatefulWidget {
 
 class _VirtualFriendProfileScreenState
     extends State<VirtualFriendProfileScreen> {
-  ValueNotifier<BannerAd?> friendProfileScreenBannerAd =
-      ValueNotifier<BannerAd?>(null);
+  // ValueNotifier<BannerAd?> friendProfileScreenBannerAd =
+  //     ValueNotifier<BannerAd?>(null);
   ValueNotifier<InterstitialAd?> friendProfileInterstitialAd =
       ValueNotifier<InterstitialAd?>(null);
   bool interstitialAdShown = false;
@@ -37,7 +36,7 @@ class _VirtualFriendProfileScreenState
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _loadBannerAd();
+    // _loadBannerAd();
   }
 
   void _showInterstitialAd() async {
@@ -62,15 +61,15 @@ class _VirtualFriendProfileScreenState
                 friendProfileInterstitialAd.value = null));
   }
 
-  void _loadBannerAd() async {
-    friendProfileScreenBannerAd.value = await AdMobServices
-        .getBannerAdByGivingAdId(GoogleAdId.friendProfileScreenBannerAdId)
-      ..load();
-  }
+  // void _loadBannerAd() async {
+  //   friendProfileScreenBannerAd.value = await AdMobServices
+  //       .getBannerAdByGivingAdId(GoogleAdId.friendProfileScreenBannerAdId)
+  //     ..load();
+  // }
 
   @override
   void dispose() {
-    friendProfileScreenBannerAd.value?.dispose();
+    // friendProfileScreenBannerAd.value?.dispose();
     super.dispose();
   }
 
@@ -79,13 +78,13 @@ class _VirtualFriendProfileScreenState
     List<String> hobbies =
         widget.friendInfo.hobbies!.map((e) => e.toString()).toList();
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: ValueListenableBuilder(
-        valueListenable: friendProfileScreenBannerAd,
-        builder: (context, value, child) {
-          return CommonWidgets.buildBannerAd(value);
-        },
-      ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButton: ValueListenableBuilder(
+      //   valueListenable: friendProfileScreenBannerAd,
+      //   builder: (context, value, child) {
+      //     return CommonWidgets.buildBannerAd(value);
+      //   },
+      // ),
       body: ListView(
         children: [
           Column(
