@@ -11,6 +11,7 @@ import 'package:kpopchat/core/constants/analytics_constants.dart';
 import 'package:kpopchat/core/constants/asset_path_constants.dart';
 import 'package:kpopchat/core/constants/color_constants.dart';
 import 'package:kpopchat/core/constants/google_ads_id.dart';
+import 'package:kpopchat/core/constants/network_constants.dart';
 import 'package:kpopchat/core/constants/text_constants.dart';
 import 'package:kpopchat/core/themes/dark_theme.dart';
 import 'package:kpopchat/core/utils/admob_services.dart';
@@ -23,6 +24,7 @@ import 'package:kpopchat/presentation/common_widgets/common_widgets.dart';
 import 'package:kpopchat/presentation/common_widgets/custom_text.dart';
 import 'package:kpopchat/presentation/widgets/menu_screen_widgets/menu_app_bar.dart';
 import 'package:kpopchat/presentation/widgets/menu_screen_widgets/menu_list_tile.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
@@ -112,6 +114,17 @@ class _MenuScreenState extends State<MenuScreen> {
                           }));
                 },
               ),
+            ),
+            const Divider(),
+            CustomListTile(
+              title: "TOS & Privacy Policy",
+              leadingIcon: CupertinoIcons.book,
+              titleColor: Theme.of(context).primaryColor,
+              onTap: () async {
+                if (!await launchUrl(Uri.parse(NetworkConstants.policyUrl))) {
+                  throw 'Could not launch TOS & policy url';
+                }
+              },
             ),
             const Divider(),
             CustomListTile(
