@@ -61,8 +61,8 @@ setUpLocator() async {
   locator.registerFactory<RemoteConfigRepo>(
       () => RemoteConfigRepoImpl(client: locator()));
   locator.registerSingleton(Location());
-  locator.registerSingleton(DataFilterRepo());
-  locator.registerSingleton(AdminRepo(locator()));
+  locator.registerFactory<DataFilterRepo>(() => DataFilterRepo());
+  locator.registerFactory<AdminRepo>(() => AdminRepo(locator()));
 
   // fetching values from network during service locator invokation
   Future.wait([

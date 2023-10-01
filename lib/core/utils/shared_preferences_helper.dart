@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kpopchat/business_logic/auth_checker_cubit/auth_checker_cubit.dart';
 import 'package:kpopchat/core/constants/remote_config_values.dart';
 import 'package:kpopchat/core/constants/shared_preferences_keys.dart';
 import 'package:kpopchat/core/utils/service_locator.dart';
 import 'package:kpopchat/data/models/user_model.dart';
+import 'package:kpopchat/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefsHelper {
@@ -64,6 +67,8 @@ class SharedPrefsHelper {
     String? userData =
         locator<SharedPreferences>().getString(SharedPrefsKeys.kUserProfile);
     if (userData == null) {
+      BlocProvider.of<AuthCheckerCubit>(navigatorKey.currentContext!)
+          .signOutUser();
       return null;
     }
     return UserModel.fromJson(jsonDecode(userData));
