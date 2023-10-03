@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:kpopchat/data/models/virtual_friend_model.dart';
 
 class VirtualFriendPostModel {
@@ -30,7 +31,12 @@ class VirtualFriendPostModel {
 
   VirtualFriendPostModel.fromJson(Map<String, dynamic> json) {
     postId = json[kPostId];
-    datePublished = json[kDatePublished].toDate();
+    try {
+      datePublished = json[kDatePublished].toDate();
+    } catch (e) {
+      datePublished = DateTime.now();
+      debugPrint("Error parsing post date: ${e.toString()} ");
+    }
     poster = VirtualFriendModel.fromJson(json[kPoster]);
     caption = json[kCaption];
     viewsCount = json[kViewsCount];
