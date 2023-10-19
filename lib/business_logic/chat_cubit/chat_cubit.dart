@@ -5,12 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kpopchat/core/constants/remote_config_values.dart';
 import 'package:kpopchat/core/constants/text_constants.dart';
 import 'package:kpopchat/core/network/failure_model.dart';
+import 'package:kpopchat/core/utils/service_locator.dart';
 import 'package:kpopchat/core/utils/shared_preferences_helper.dart';
 import 'package:kpopchat/data/models/schema_message_model.dart';
 import 'package:kpopchat/data/models/schema_virtual_friend_model.dart';
 import 'package:kpopchat/data/models/user_model.dart';
 import 'package:kpopchat/data/models/virtual_friend_model.dart';
 import 'package:kpopchat/data/repository/chat_repo.dart';
+import 'package:kpopchat/data/repository/data_filter_repo.dart';
 import 'package:kpopchat/main.dart';
 import 'package:kpopchat/presentation/common_widgets/common_widgets.dart';
 
@@ -104,6 +106,8 @@ class ChatCubit extends Cubit<ChatState> {
       final friendMsgResponse =
           await chatRepo.getMsgFromVirtualFriend(schemaVirtualFriendModel);
       friendMsgResponse.fold((friendMsg) async {
+        locator<DataFilterRepo>()
+            .filterChat(userNewMsg.text, friendMsg.message ?? "null");
         final Either<List<SchemaMessageModel>, FailureModel>
             msgsWithBotNewMsgResp = await chatRepo.getChatHistoryWithThisFriend(
                 virtualFriendId: virtualFriendId,

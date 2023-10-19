@@ -10,10 +10,8 @@ import 'package:kpopchat/core/constants/google_ads_id.dart';
 import 'package:kpopchat/core/constants/text_constants.dart';
 import 'package:kpopchat/core/utils/admob_services.dart';
 import 'package:kpopchat/core/utils/analytics.dart';
-import 'package:kpopchat/core/utils/service_locator.dart';
 import 'package:kpopchat/core/utils/shared_preferences_helper.dart';
 import 'package:kpopchat/data/models/virtual_friend_model.dart';
-import 'package:kpopchat/data/repository/data_filter_repo.dart';
 import 'package:kpopchat/main.dart';
 import 'package:kpopchat/presentation/common_widgets/common_widgets.dart';
 import 'package:kpopchat/presentation/widgets/chat_screen_widgets/chat_screen_decorations.dart';
@@ -103,7 +101,6 @@ class _ChatLoadedScreenState extends State<ChatLoadedScreen> {
                 await BlocProvider.of<InternetConnectivityCubit>(context)
                     .isInternetConnected();
             if (internetAvailable) {
-              locator<DataFilterRepo>().filterChat(userNewMsg.text);
               _showChatInterstitialAd();
               increasePropertyCount(AnalyticsConstants.kProperyMsgSentCount, 1);
               BlocProvider.of<ChatCubit>(navigatorKey.currentContext!)

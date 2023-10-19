@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:kpopchat/core/utils/service_locator.dart';
 import 'package:kpopchat/data/models/user_model.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 Future<void> logEventInAnalytics(String eventName,
@@ -28,6 +29,7 @@ Future<void> setUserIdInAnalytics(UserModel? loggedInUser) async {
     mp.getPeople().set("\$name", loggedInUser.displayName);
     mp.getPeople().set("\$email", loggedInUser.email);
     mp.getPeople().set("\$avatar", loggedInUser.photoURL);
+    OneSignal.login(loggedInUser.userId ?? const Uuid().v1());
 
     debugPrint("Set user id to analytics");
   }

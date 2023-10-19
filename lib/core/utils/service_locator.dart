@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -26,6 +27,7 @@ import 'package:kpopchat/data/repository_implementation/remote_config_repo_impl.
 import 'package:kpopchat/data/repository_implementation/virtual_friends_repo_impl.dart';
 import 'package:location/location.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final locator = GetIt.instance;
@@ -35,6 +37,10 @@ setUpLocator() async {
       await Mixpanel.init(EnvKeys.mixpanelToken, trackAutomaticEvents: true);
   mixpanel.setLoggingEnabled(true);
   locator.registerSingleton<Mixpanel>(mixpanel);
+  if (kDebugMode) {
+    OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+  }
+  OneSignal.initialize(EnvKeys.oneSignalAppId);
   SharedPreferences prefs = await SharedPreferences.getInstance();
   FirebaseRemoteConfig rc = FirebaseRemoteConfig.instance;
   locator.registerSingleton<SharedPreferences>(prefs);
