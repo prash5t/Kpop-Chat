@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kpopchat/admin_controls/btn_to_autogenerate_post.dart';
+import 'package:kpopchat/admin_controls/gdpr_utils.dart';
 import 'package:kpopchat/business_logic/virtual_friends_posts_cubit/virtual_friends_posts_cubit.dart';
 import 'package:kpopchat/business_logic/virtual_friends_posts_cubit/virtual_friends_posts_state.dart';
 import 'package:kpopchat/core/constants/google_ads_id.dart';
@@ -28,6 +29,12 @@ class _HomeScreenState extends State<HomeScreen> {
     friendProfileScreenBannerAd.value = await AdMobServices
         .getBannerAdByGivingAdId(GoogleAdId.friendProfileScreenBannerAdId)
       ..load();
+  }
+
+  @override
+  initState() {
+    initiateGDPRConsent();
+    super.initState();
   }
 
   @override
