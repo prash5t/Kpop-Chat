@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,7 +7,6 @@ import 'package:kpopchat/core/utils/analytics.dart';
 import 'package:kpopchat/presentation/common_widgets/common_decorations.dart';
 import 'package:kpopchat/presentation/common_widgets/common_widgets.dart';
 import 'package:kpopchat/presentation/common_widgets/custom_text.dart';
-import 'package:kpopchat/presentation/common_widgets/loading_overlay_screen.dart';
 import 'package:kpopchat/core/constants/asset_path_constants.dart';
 import 'package:kpopchat/core/constants/color_constants.dart';
 import 'package:kpopchat/core/constants/network_constants.dart';
@@ -29,7 +27,7 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  bool isLoading = false;
+  // bool isLoading = false;
   TapGestureRecognizer? _policyRecognizer;
 
   @override
@@ -54,12 +52,7 @@ class _SignInScreenState extends State<SignInScreen> {
       body: Container(
         decoration: BoxDecoration(
             gradient: CommonDecoration.appPrimaryGradientBackground()),
-        child: Stack(
-          children: [
-            buildSignInOverallWidget(),
-            if (isLoading) const LoadingOverlayScreen()
-          ],
-        ),
+        child: buildSignInOverallWidget(),
       ),
     );
   }
@@ -98,9 +91,6 @@ class _SignInScreenState extends State<SignInScreen> {
                 const PleaseLoginText(),
                 SignInWithGoogleBtn(onTap: () async {
                   logEventInAnalytics(AnalyticsConstants.kEventSignInClick);
-                  setState(() {
-                    isLoading = true;
-                  });
                   if (await locator<AuthRepo>().signInWithGoogle()) {
                     // sign in success
                     logEventInAnalytics(AnalyticsConstants.kEventSignedIn);
@@ -108,9 +98,6 @@ class _SignInScreenState extends State<SignInScreen> {
                         .pushNamedAndRemoveUntil(
                             AppRoutes.dashboardScreen, (route) => false);
                   }
-                  setState(() {
-                    isLoading = false;
-                  });
                 }),
                 PolicyWidget(policyRecognizer: _policyRecognizer),
               ],

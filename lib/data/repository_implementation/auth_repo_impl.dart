@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:kpopchat/core/constants/firestore_collections_constants.dart';
 import 'package:kpopchat/core/constants/location_constants.dart';
 import 'package:kpopchat/core/utils/analytics.dart';
+import 'package:kpopchat/core/utils/loading_utils.dart';
 import 'package:kpopchat/core/utils/service_locator.dart';
 import 'package:kpopchat/core/utils/shared_preferences_helper.dart';
 import 'package:kpopchat/data/models/user_model.dart';
@@ -19,9 +20,11 @@ class AuthRepoImplementation implements AuthRepo {
   AuthRepoImplementation(this.googleSignIn, this.firestore);
   @override
   Future<bool> signInWithGoogle() async {
+    LoadingUtils.showLoadingDialog();
     // try {
     GoogleSignInAccount? googleUser = await googleSignIn.signIn();
     if (googleUser == null) {
+      LoadingUtils.hideLoadingDialog();
       return false;
     }
     final GoogleSignInAuthentication googleAuth =
