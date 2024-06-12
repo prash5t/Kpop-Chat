@@ -18,7 +18,7 @@ Container _buildMarkerWidget(UserModel realUser) {
       imageFilter: ImageFilter.blur(sigmaY: 2, sigmaX: 2),
       enabled: realUser.anonymizeLocation ?? true,
       child: CachedCircleAvatar(
-        imageUrl: realUser.photoURL!,
+        imageUrl: realUser.photoURL ?? "",
         radius: 100,
       ),
     ),

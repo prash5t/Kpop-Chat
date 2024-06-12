@@ -13,4 +13,9 @@ class TextConstants {
       "Please check your internet connection and try again later.";
   static const String writeYourMsgHint = "Chat about Kpop...";
   static const String reportPostTitle = "Report this Kpop Fan's post?";
+  static const String cachedLocations = "Cached Locations";
+  static const String emptyCache = "No any locations are cached at the moment.";
+  static const String notCaching = "No locations are currently being cached";
+  static const String cacheNew = "Download new location";
+  static const String placeName = "Name of the place you want to download";
 }

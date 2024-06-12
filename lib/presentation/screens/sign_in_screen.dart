@@ -147,7 +147,7 @@ class PolicyWidget extends StatelessWidget {
                 recognizer: _policyRecognizer,
                 style: const TextStyle(
                     height: 1.44,
-                    fontFamily: 'Barlow',
+                    fontFamily: 'Barlorw',
                     fontWeight: FontWeight.bold,
                     color: ColorConstants.primaryColor))
           ])),

@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SharedPrefsHelper {
   static void clearAll() {
     locator<SharedPreferences>().remove(SharedPrefsKeys.kUserProfile);
+    locator<SharedPreferences>().remove(SharedPrefsKeys.kCachedLocations);
   }
 
   static void saveUserProfileFromLogin(User? userToSave) {

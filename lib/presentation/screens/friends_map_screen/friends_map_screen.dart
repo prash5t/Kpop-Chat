@@ -2,10 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
+import 'package:kpopchat/business_logic/fmtc_cubit/fmtc_cubit.dart';
 import 'package:kpopchat/business_logic/real_users_cubit/real_users_cubit.dart';
 import 'package:kpopchat/business_logic/virtual_friends_list_cubit/virtual_friends_list_cubit.dart';
 import 'package:kpopchat/core/constants/analytics_constants.dart';
 import 'package:kpopchat/core/constants/color_constants.dart';
+import 'package:kpopchat/core/constants/text_constants.dart';
+import 'package:kpopchat/core/routes/app_routes.dart';
 import 'package:kpopchat/core/utils/analytics.dart';
 import 'package:kpopchat/core/utils/get_geo_location_of_user.dart';
 import 'package:kpopchat/core/utils/service_locator.dart';
@@ -15,6 +19,7 @@ import 'package:kpopchat/data/models/schema_virtual_friend_model.dart';
 import 'package:kpopchat/data/models/user_model.dart';
 import 'package:kpopchat/data/repository/real_users_repo.dart';
 import 'package:kpopchat/presentation/common_widgets/cached_circle_avatar.dart';
+import 'package:kpopchat/presentation/common_widgets/common_decorations.dart';
 import 'package:kpopchat/presentation/common_widgets/custom_text.dart';
 import 'package:kpopchat/presentation/screens/friends_map_screen/widgets/real_user_market_widget.dart';
 import 'package:kpopchat/presentation/widgets/chat_screen_widgets/online_status_widget.dart';
@@ -81,10 +86,8 @@ class _FriendsMapScreenState extends State<FriendsMapScreen> {
 
   Container _buildFloatingWidgets(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.onSecondary,
-          borderRadius: BorderRadius.circular(4)),
-      child: Row(
+      decoration: CommonDecoration.floatingActionBoxDec(),
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Column(
@@ -92,40 +95,64 @@ class _FriendsMapScreenState extends State<FriendsMapScreen> {
             children: [
               IconButton(
                 icon: const Icon(
-                  Icons.my_location_sharp,
+                  Icons.maps_home_work_outlined,
                 ),
                 color: Theme.of(context).primaryColor,
-                onPressed: () async {
-                  logEventInAnalytics(
-                      AnalyticsConstants.kClickedPreciseLocation);
-                  await positionCameraOnMap(20);
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushNamed(AppRoutes.cachedLocationScreen);
                 },
               ),
-              CustomText(text: "Live"),
+              CustomText(text: TextConstants.cachedLocations),
               SizedBox(
                 height: 2,
               )
             ],
           ),
-          Column(
+          Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ValueListenableBuilder(
-                valueListenable: loggedInUserData,
-                builder: (context, updatedUserData, child) {
-                  return CupertinoCheckbox(
-                      value: updatedUserData?.anonymizeLocation ?? true,
-                      onChanged: (value) async {
-                        logEventInAnalytics(
-                            AnalyticsConstants.kClickedGhostMode);
-                        loggedInUserData.value!.anonymizeLocation = value;
-                        await positionCameraOnMap(20);
-                        // TODO: replace setstate
-                        setState(() {});
-                      });
-                },
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.my_location_sharp,
+                    ),
+                    color: Theme.of(context).primaryColor,
+                    onPressed: () async {
+                      logEventInAnalytics(
+                          AnalyticsConstants.kClickedPreciseLocation);
+                      await positionCameraOnMap(20);
+                    },
+                  ),
+                  CustomText(text: "Live"),
+                  SizedBox(
+                    height: 2,
+                  )
+                ],
               ),
-              CustomText(text: "Ghost Mode")
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ValueListenableBuilder(
+                    valueListenable: loggedInUserData,
+                    builder: (context, updatedUserData, child) {
+                      return CupertinoCheckbox(
+                          value: updatedUserData?.anonymizeLocation ?? true,
+                          onChanged: (value) async {
+                            logEventInAnalytics(
+                                AnalyticsConstants.kClickedGhostMode);
+                            loggedInUserData.value!.anonymizeLocation = value;
+                            await positionCameraOnMap(20);
+                            // TODO: replace setstate
+                            setState(() {});
+                          });
+                    },
+                  ),
+                  CustomText(text: "Ghost Mode")
+                ],
+              ),
             ],
           ),
         ],
@@ -134,6 +161,7 @@ class _FriendsMapScreenState extends State<FriendsMapScreen> {
   }
 
   FlutterMap _buildMapWidget(LatLongAndZoom? newFocusPoint) {
+    FMTCStore? store = BlocProvider.of<FmtcCubit>(context).fmtcStore;
     return FlutterMap(
       options: MapOptions(
           interactiveFlags: InteractiveFlag.doubleTapZoom |
@@ -149,6 +177,11 @@ class _FriendsMapScreenState extends State<FriendsMapScreen> {
       mapController: friendsMapController,
       children: [
         TileLayer(
+          tileProvider: store == null
+              ? null
+              : store.getTileProvider(
+                  settings: FMTCTileProviderSettings(
+                      behavior: CacheBehavior.onlineFirst)),
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'com.example.app',
         ),
@@ -159,39 +192,49 @@ class _FriendsMapScreenState extends State<FriendsMapScreen> {
               for (SchemaVirtualFriendModel friendInfo in virtualFriends!)
                 if (friendInfo.info?.latLong != null)
                   Marker(
+                    child: _buildMarker(friendInfo),
                     rotate: false,
                     point: LatLng(friendInfo.info!.latLong!.lat!,
                         friendInfo.info!.latLong!.long!),
-                    builder: (context) {
-                      return _buildMarker(friendInfo);
-                    },
+                    // builder: (context) {
+                    //   return _buildMarker(friendInfo);
+                    // },
                   ),
             // Real users markers
             if (realUsers.value.isNotEmpty)
               for (UserModel realUser in realUsers.value)
                 if (realUser.latLong != null)
                   Marker(
-                      rotate: false,
-                      point: LatLng(
-                          realUser.latLong!.lat!, realUser.latLong!.long!),
-                      builder: (context) {
-                        return buildRealUserMarker(realUser);
-                      }),
+                    child: buildRealUserMarker(realUser),
+                    rotate: false,
+                    point:
+                        LatLng(realUser.latLong!.lat!, realUser.latLong!.long!),
+                    // builder: (context) {
+                    //   return buildRealUserMarker(realUser);
+                    // }
+                  ),
 
             // Logged in user marker
             if (newFocusPoint.latLong != null)
               Marker(
-                  rotate: false,
-                  point: LatLng(newFocusPoint.latLong!.lat!,
-                      newFocusPoint.latLong!.long!),
-                  builder: (context) {
-                    return ValueListenableBuilder(
-                      valueListenable: loggedInUserData,
-                      builder: (context, updatedUserData, child) {
-                        return buildRealUserMarker(updatedUserData!);
-                      },
-                    );
-                  })
+                child: ValueListenableBuilder(
+                  valueListenable: loggedInUserData,
+                  builder: (context, updatedUserData, child) {
+                    return buildRealUserMarker(updatedUserData!);
+                  },
+                ),
+                rotate: false,
+                point: LatLng(
+                    newFocusPoint.latLong!.lat!, newFocusPoint.latLong!.long!),
+                // builder: (context) {
+                //   return ValueListenableBuilder(
+                //     valueListenable: loggedInUserData,
+                //     builder: (context, updatedUserData, child) {
+                //       return buildRealUserMarker(updatedUserData!);
+                //     },
+                //   );
+                // }
+              )
           ],
         )
       ],

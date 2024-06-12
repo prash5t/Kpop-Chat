@@ -1,13 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kpopchat/business_logic/cache_maps_cubit/cache_maps_cubit.dart';
 import 'package:kpopchat/business_logic/real_users_cubit/real_users_cubit.dart';
 import 'package:kpopchat/business_logic/virtual_friends_list_cubit/virtual_friends_list_cubit.dart';
 import 'package:kpopchat/business_logic/virtual_friends_posts_cubit/virtual_friends_posts_cubit.dart';
+import 'package:kpopchat/core/constants/location_constants.dart';
 import 'package:kpopchat/core/utils/initializer.dart';
 import 'package:kpopchat/presentation/screens/friends_map_screen/friends_map_screen.dart';
 import 'package:kpopchat/presentation/screens/home_screen/home_screen.dart';
 import 'package:kpopchat/presentation/screens/virtual_friends_list_screen/virtual_friends_list_screen.dart';
+import 'package:latlong2/latlong.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -24,6 +27,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   void initState() {
+    BlocProvider.of<CacheMapsCubit>(context).cacheMapOfSelectedArea(
+      LocationConstants.areaToProgramitcallyCache,
+      LocationConstants.radiusOfAreaToFetch,
+    );
     RequiredInitializations.initializeFirebaseRemoteConfig();
     BlocProvider.of<VirtualFriendsPostsCubit>(context).fetchPosts();
     BlocProvider.of<VirtualFriendsListCubit>(context).getVirtualFriends();

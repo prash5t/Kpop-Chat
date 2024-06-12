@@ -8,7 +8,7 @@ import 'package:kpopchat/core/routes/app_routes.dart';
 import 'package:kpopchat/core/utils/service_locator.dart';
 import 'package:kpopchat/core/utils/shared_preferences_helper.dart';
 import 'package:kpopchat/main.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
+// import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class AuthCheckerCubit extends Cubit<AuthStates> {
   AuthCheckerCubit() : super(AuthStates.loadingState);
@@ -33,7 +33,7 @@ class AuthCheckerCubit extends Cubit<AuthStates> {
     await googleSignIn.disconnect();
     await googleSignIn.signOut();
     await firebaseAuth.signOut();
-    OneSignal.logout();
+    // OneSignal.logout();
     emit(AuthStates.loggedOutState);
     Navigator.of(navigatorKey.currentContext!)
         .pushNamedAndRemoveUntil(AppRoutes.signInScreen, (route) => false);

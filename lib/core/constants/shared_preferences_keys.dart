@@ -4,4 +4,5 @@ class SharedPrefsKeys {
   static const String kSchemaKey = "local_schema";
   static const String kUserProfile = "user_profile";
   static const String kFriendLastUnlockTime = "friend_last_unlock_time";
+  static const String kCachedLocations = "cached_locations";
 }
