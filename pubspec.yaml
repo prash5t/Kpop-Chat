@@ -68,15 +68,18 @@ dependencies:
   avatar_glow: ^3.0.1
   intl: ^0.19.0  # pinned by dash_chat_2; bumps to ^0.20.2 in kpopchat-l10n-add phase when dash_chat_2 is replaced
   dart_emoji: ^0.2.0+2
-  mixpanel_flutter: ^2.2.0
+  mixpanel_flutter: ^2.7.0
   google_mobile_ads: ^8.0.0
   # google_maps_flutter: ^2.5.3
   flutter_map: ^8.3.0
   flutter_map_tile_caching: ^10.1.1
   popup: ^0.0.1
   location: ^8.0.1
-  # onesignal_flutter: ^5.0.2
-  gdpr_dialog: ^2.1.1
+  # onesignal_flutter: ^5.0.2 — dropped in baseline-setup; FCM via firebase_messaging instead
+  # gdpr_dialog: ^2.1.1 — dropped in android-modernize; package is unmaintained and
+  # missing the android namespace AGP 8+ requires. Was only used in gitignored
+  # admin_controls/gdpr_utils.dart (dev-only). If user-facing GDPR consent is
+  # needed for EU rollout, replace with a hand-rolled dialog or revisit.
   percent_indicator: ^4.2.3
   geocoding: ^4.0.0
 
