@@ -1,12 +1,9 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:kpopchat/business_logic/cache_maps_cubit/cache_maps_cubit.dart';
 import 'package:kpopchat/business_logic/chat_cubit/chat_cubit.dart';
-import 'package:kpopchat/business_logic/fmtc_cubit/fmtc_cubit.dart';
 import 'package:kpopchat/business_logic/internet_checker_cubit.dart';
 import 'package:kpopchat/business_logic/real_users_cubit/real_users_cubit.dart';
 import 'package:kpopchat/business_logic/virtual_friends_list_cubit/virtual_friends_list_cubit.dart';
@@ -21,11 +18,6 @@ import 'core/utils/service_locator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  try {
-    await FMTCObjectBoxBackend().initialise();
-  } catch (error, stackTrace) {
-    debugPrint("debugCache: ${error.toString()}");
-  }
   await FirebaseSetup().initializeFirebase();
   await setUpLocator();
   RequiredInitializations.initializeFirebaseRemoteConfig();
@@ -44,8 +36,6 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => AuthCheckerCubit()),
-          BlocProvider(create: (context) => FmtcCubit()),
-          BlocProvider(create: (context) => CacheMapsCubit()),
           BlocProvider(create: (context) => ThemeCubit()),
           BlocProvider(
               create: (context) => VirtualFriendsPostsCubit(locator())),

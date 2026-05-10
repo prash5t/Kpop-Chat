@@ -7,7 +7,7 @@ import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 Future<void> logEventInAnalytics(String eventName,
-    {Map<String, dynamic>? parameters}) async {
+    {Map<String, Object>? parameters}) async {
   // log to firebase analytics
   locator<FirebaseAnalytics>()
       .logEvent(name: eventName, parameters: parameters);

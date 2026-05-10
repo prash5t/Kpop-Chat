@@ -3,7 +3,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -32,26 +31,27 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 final locator = GetIt.instance;
 
-setUpLocator() async {
+Future<void> setUpLocator() async {
   Mixpanel mixpanel =
       await Mixpanel.init(EnvKeys.mixpanelToken, trackAutomaticEvents: true);
   mixpanel.setLoggingEnabled(true);
   locator.registerSingleton<Mixpanel>(mixpanel);
-  // if (kDebugMode) {
-  //   OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
-  // }
-  // OneSignal.initialize(EnvKeys.oneSignalAppId);
   SharedPreferences prefs = await SharedPreferences.getInstance();
   FirebaseRemoteConfig rc = FirebaseRemoteConfig.instance;
   locator.registerSingleton<SharedPreferences>(prefs);
   locator.registerFactory(() => FirebaseAuth.instance);
-  locator.registerSingleton(InternetConnectionChecker());
+  locator
+      .registerSingleton<InternetConnectionChecker>(InternetConnectionChecker.createInstance());
   locator.registerSingleton(FirebaseAnalytics.instance);
   locator.registerSingleton(FlutterLocalNotificationsPlugin());
   locator.registerFactory<FlutterSecureStorage>(
       () => const FlutterSecureStorage());
-  locator.registerFactory<GoogleSignIn>(() => GoogleSignIn(
-      clientId: DefaultFirebaseOptions.currentPlatform.iosClientId));
+  // google_sign_in v7 — singleton + mandatory initialize(); clientId still
+  // accepted for iOS (Android resolves automatically via google-services.json).
+  await GoogleSignIn.instance.initialize(
+    clientId: DefaultFirebaseOptions.currentPlatform.iosClientId,
+  );
+  locator.registerFactory<GoogleSignIn>(() => GoogleSignIn.instance);
   locator.registerFactory<AuthRepo>(
       () => AuthRepoImplementation(locator(), locator()));
   locator.registerFactory(() => SchemaHelper());
@@ -69,8 +69,6 @@ setUpLocator() async {
   locator.registerSingleton(Location());
   locator.registerFactory<DataFilterRepo>(() => DataFilterRepo());
   locator.registerFactory<AdminRepo>(() => AdminRepo(locator()));
-
-  // locator.registerSingleton<FMTCStore>(FMTCStore('demo'));
 
   // fetching values from network during service locator invokation
   Future.wait([

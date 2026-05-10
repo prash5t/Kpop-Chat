@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
-import 'package:kpopchat/business_logic/fmtc_cubit/fmtc_cubit.dart';
 import 'package:kpopchat/business_logic/real_users_cubit/real_users_cubit.dart';
 import 'package:kpopchat/business_logic/virtual_friends_list_cubit/virtual_friends_list_cubit.dart';
 import 'package:kpopchat/core/constants/analytics_constants.dart';
@@ -90,25 +88,8 @@ class _FriendsMapScreenState extends State<FriendsMapScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                icon: const Icon(
-                  Icons.maps_home_work_outlined,
-                ),
-                color: Theme.of(context).primaryColor,
-                onPressed: () {
-                  Navigator.of(context)
-                      .pushNamed(AppRoutes.cachedLocationScreen);
-                },
-              ),
-              CustomText(text: TextConstants.cachedLocations),
-              SizedBox(
-                height: 2,
-              )
-            ],
-          ),
+          // Cached-locations entry point removed with the offline-tile-cache
+          // feature deferral; revive when FMTC v10 migration lands.
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -161,29 +142,25 @@ class _FriendsMapScreenState extends State<FriendsMapScreen> {
   }
 
   FlutterMap _buildMapWidget(LatLongAndZoom? newFocusPoint) {
-    FMTCStore? store = BlocProvider.of<FmtcCubit>(context).fmtcStore;
     return FlutterMap(
       options: MapOptions(
-          interactiveFlags: InteractiveFlag.doubleTapZoom |
-              InteractiveFlag.drag |
-              InteractiveFlag.pinchMove |
-              InteractiveFlag.pinchZoom,
-          center:
+          interactionOptions: const InteractionOptions(
+            flags: InteractiveFlag.doubleTapZoom |
+                InteractiveFlag.drag |
+                InteractiveFlag.pinchMove |
+                InteractiveFlag.pinchZoom,
+          ),
+          initialCenter:
               LatLng(newFocusPoint!.latLong!.lat!, newFocusPoint.latLong!.lat!),
-          zoom: newFocusPoint.zoom!,
+          initialZoom: newFocusPoint.zoom!,
           minZoom: 2,
           maxZoom: 17,
           keepAlive: true),
       mapController: friendsMapController,
       children: [
         TileLayer(
-          tileProvider: store == null
-              ? null
-              : store.getTileProvider(
-                  settings: FMTCTileProviderSettings(
-                      behavior: CacheBehavior.onlineFirst)),
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'com.example.app',
+          userAgentPackageName: 'com.awarself.kpopchat',
         ),
         MarkerLayer(
           markers: [

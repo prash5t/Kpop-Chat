@@ -147,9 +147,8 @@ class _MenuScreenState extends State<MenuScreen> {
     return Row(
       children: [
         AvatarGlow(
-          shape: BoxShape.rectangle,
           glowColor: ColorConstants.primaryColor,
-          endRadius: 50,
+          glowRadiusFactor: 0.6,
           child: Material(
             elevation: 3,
             child: Container(
@@ -185,9 +184,8 @@ class _MenuScreenState extends State<MenuScreen> {
     return Row(
       children: [
         AvatarGlow(
-          shape: BoxShape.rectangle,
           glowColor: ColorConstants.primaryColor,
-          endRadius: 50,
+          glowRadiusFactor: 0.6,
           child: Material(
             elevation: 3,
             child: Container(
