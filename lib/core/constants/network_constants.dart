@@ -4,8 +4,7 @@ class NetworkConstants {
   static const String edenAIChatPath = "v2/text/chat";
   static String edenAIKey = "";
 
-  static const String policyUrl =
-      "https://aprashantz.github.io/kpop-chat-policy/";
+  static const String policyUrl = "https://prash5t.github.io/kpop-chat-policy/";
 
   static const String urlForIPInfo = "http://ip-api.com/json";
 }
