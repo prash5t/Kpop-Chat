@@ -16,6 +16,7 @@ import 'package:kpopchat/core/constants/text_constants.dart';
 import 'package:kpopchat/core/themes/dark_theme.dart';
 import 'package:kpopchat/core/utils/admob_services.dart';
 import 'package:kpopchat/core/utils/analytics.dart';
+import 'package:kpopchat/core/utils/consent_helper.dart';
 import 'package:kpopchat/core/utils/shared_preferences_helper.dart';
 import 'package:kpopchat/data/models/user_model.dart';
 import 'package:kpopchat/main.dart';
@@ -117,13 +118,37 @@ class _MenuScreenState extends State<MenuScreen> {
             ),
             const Divider(),
             CustomListTile(
-              title: "TOS & Privacy Policy",
+              title: "Privacy Policy",
               leadingIcon: CupertinoIcons.book,
               titleColor: Theme.of(context).primaryColor,
               onTap: () async {
-                if (!await launchUrl(Uri.parse(NetworkConstants.policyUrl))) {
-                  throw 'Could not launch TOS & policy url';
+                if (!await launchUrl(
+                    Uri.parse(NetworkConstants.privacyPolicyUrl),
+                    mode: LaunchMode.externalApplication)) {
+                  throw 'Could not launch privacy policy url';
                 }
+              },
+            ),
+            const Divider(),
+            CustomListTile(
+              title: "Ads & In-App Unlocks",
+              leadingIcon: CupertinoIcons.money_dollar_circle,
+              titleColor: Theme.of(context).primaryColor,
+              onTap: () async {
+                if (!await launchUrl(
+                    Uri.parse(NetworkConstants.inAppEconomyUrl),
+                    mode: LaunchMode.externalApplication)) {
+                  throw 'Could not launch in-app-economy url';
+                }
+              },
+            ),
+            const Divider(),
+            CustomListTile(
+              title: "Privacy Choices",
+              leadingIcon: CupertinoIcons.shield,
+              titleColor: Theme.of(context).primaryColor,
+              onTap: () async {
+                await showPrivacyChoices();
               },
             ),
             const Divider(),
@@ -133,6 +158,15 @@ class _MenuScreenState extends State<MenuScreen> {
               titleColor: Theme.of(context).primaryColor,
               onTap: () async {
                 await logoutUser(context);
+              },
+            ),
+            const Divider(),
+            CustomListTile(
+              title: "Delete Account",
+              leadingIcon: Icons.delete_forever,
+              titleColor: Colors.red,
+              onTap: () async {
+                await _confirmAndDeleteAccount(context);
               },
             ),
             const Divider(),
@@ -227,6 +261,57 @@ class _MenuScreenState extends State<MenuScreen> {
       logEventInAnalytics(AnalyticsConstants.kEventSignOut);
       BlocProvider.of<AuthCheckerCubit>(navigatorKey.currentContext!)
           .signOutUser();
+    }
+  }
+
+  Future<void> _confirmAndDeleteAccount(BuildContext context) async {
+    final bool? confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          title: const Text('Delete account?'),
+          content: const Text(
+            'This permanently removes your profile, chat history, and ad-unlock activity. It can’t be undone.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
+              onPressed: () => Navigator.of(ctx).pop(true),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+    if (confirmed != true) return;
+
+    logEventInAnalytics(AnalyticsConstants.kEventSignOut);
+    final outcome =
+        await BlocProvider.of<AuthCheckerCubit>(navigatorKey.currentContext!)
+            .deleteUserAccount();
+
+    final ctx = navigatorKey.currentContext;
+    if (ctx == null) return;
+    switch (outcome) {
+      case DeletionOutcome.success:
+        // Navigation to sign-in already happened inside the cubit.
+        break;
+      case DeletionOutcome.requiresReauth:
+        CommonWidgets.customFlushBar(
+          ctx,
+          'Sign in again, then try Delete Account once more. Or email awarself@gmail.com to delete your account.',
+        );
+        break;
+      case DeletionOutcome.failed:
+        CommonWidgets.customFlushBar(
+          ctx,
+          'Couldn’t complete deletion. Email awarself@gmail.com to delete your account.',
+        );
+        break;
     }
   }
 }
