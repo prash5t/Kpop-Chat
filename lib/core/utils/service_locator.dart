@@ -46,10 +46,15 @@ Future<void> setUpLocator() async {
   locator.registerSingleton(FlutterLocalNotificationsPlugin());
   locator.registerFactory<FlutterSecureStorage>(
       () => const FlutterSecureStorage());
-  // google_sign_in v7 — singleton + mandatory initialize(); clientId still
-  // accepted for iOS (Android resolves automatically via google-services.json).
+  // google_sign_in v7 — singleton + mandatory initialize().
+  //   * clientId — iOS only (passed to GMS Auth; ignored on Android).
+  //   * serverClientId — REQUIRED on Android because v7 uses Credential
+  //     Manager; the OAuth web client ID becomes the audience of the
+  //     returned idToken so FirebaseAuth.signInWithCredential will accept
+  //     it. Without this, sign-in fails with "Account reauth failed."
   await GoogleSignIn.instance.initialize(
     clientId: DefaultFirebaseOptions.currentPlatform.iosClientId,
+    serverClientId: EnvKeys.webClientId,
   );
   locator.registerFactory<GoogleSignIn>(() => GoogleSignIn.instance);
   locator.registerFactory<AuthRepo>(

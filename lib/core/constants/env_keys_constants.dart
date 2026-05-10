@@ -20,6 +20,7 @@ class EnvKeys {
   static const String appIdAndroid = Env.firebaseAppIdAndroid;
   static const String appIdIos = Env.firebaseAppIdIos;
   static const String iosClientId = Env.firebaseIosClientId;
+  static const String webClientId = Env.firebaseWebClientId;
   static const String messagingSenderId = Env.firebaseMessagingSenderId;
   static const String projectId = Env.firebaseProjectId;
   static const String storageBucket = Env.firebaseStorageBucket;

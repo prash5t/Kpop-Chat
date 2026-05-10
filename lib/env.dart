@@ -136,6 +136,15 @@ class Env {
     'FIREBASE_IOS_CLIENT_ID',
     defaultValue: '',
   );
+  /// OAuth 2.0 web client ID from google-services.json `oauth_client` with
+  /// `client_type: 3`. Required by `GoogleSignIn.instance.initialize(...)`
+  /// as `serverClientId` so the resulting ID token is suitable for
+  /// `FirebaseAuth.signInWithCredential` on Android (google_sign_in v7+
+  /// uses Android Credential Manager which needs an explicit audience).
+  static const String firebaseWebClientId = String.fromEnvironment(
+    'FIREBASE_WEB_CLIENT_ID',
+    defaultValue: '',
+  );
   static const String firebaseMessagingSenderId = String.fromEnvironment(
     'FIREBASE_MESSAGING_SENDER_ID',
     defaultValue: '',
