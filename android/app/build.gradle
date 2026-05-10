@@ -74,7 +74,7 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
 
-        manifestPlaceholders['ADMOB_APP_ID'] = dartEnvironmentVariables.ADMOB_APP_ID
+        manifestPlaceholders['ADMOB_APP_ID'] = dartEnvironmentVariables.ADMOB_APP_ID_ANDROID
     }
 
         signingConfigs {

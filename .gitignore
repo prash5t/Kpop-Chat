@@ -43,13 +43,30 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# manual git ignores below
+# manual git ignores below — credentials, signing, dev-only
+
+# Firebase config files (per-app secrets)
 /ios/Runner/GoogleService-Info.plist
 /android/app/google-services.json
-/lib/core/constants/env_keys_constants.dart
-/lib/core/constants/google_ads_id.dart
 /ios/Flutter/EnvKeys.xcconfig
+
+# Credentials — sourced exclusively via --dart-define-from-file=.env.json
+# (consumed at compile time by lib/env.dart). Never commit real values.
+.env.json
 .env
-.vscode/
+
+# Release signing — keystore lives outside the repo at
+# ~/Prash_M4/awarself-creds/kpopchat/upload-keystore.jks; key.properties
+# holds the (absolute) path + passwords and is per-machine.
+/android/key.properties
+/android/app/upload-keystore.jks
+*.keystore
+*.jks
+
+# Dev/admin-only paths — gated behind admin user / kDebugMode, not shipped
+# in release builds. Kept out of source so personal Telegram chat IDs and
+# AI-post-generation tooling stay local.
 /lib/data/repository/data_filter_repo.dart
 /lib/admin_controls/
+
+.vscode/

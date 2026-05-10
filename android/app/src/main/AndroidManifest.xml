@@ -11,9 +11,6 @@
         android:label="Kpop Chat"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
-                 <!-- TODO: Add your Google Maps API key here (For now using, personal test key, replace on prod) -->
-                <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyBpYAAKVdViwF9zQZjlH778MlxK2JJ2jTE"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
