@@ -1,5 +1,6 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -18,6 +19,11 @@ import 'core/utils/service_locator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Pair with MainActivity.enableEdgeToEdge() — declares Flutter's intent
+  // to draw behind system bars so Scaffold's SafeArea + MediaQuery.padding
+  // place content correctly on Android 15 (targetSdk 35) where edge-to-
+  // edge is the default.
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   await FirebaseSetup().initializeFirebase();
   await setUpLocator();
   RequiredInitializations.initializeFirebaseRemoteConfig();
