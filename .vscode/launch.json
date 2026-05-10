@@ -1,0 +1,39 @@
+{
+    // VS Code launch configurations for kpopchat.
+    //
+    // Every config passes `--dart-define-from-file=.env.json` via toolArgs
+    // so Mixpanel + AdMob + Telegram + Firebase manual-init credentials
+    // reach String.fromEnvironment(...) at runtime — same plumbing as
+    // scripts/run.sh and scripts/build_release.sh. Without this flag, env
+    // values would be empty strings: Firebase init would crash with
+    // "ApiKey must be set", AdMob would fall back to test ads, Mixpanel
+    // would skip init, and the Telegram admin notifier would no-op.
+    //
+    // To run with empty env on purpose (e.g. to verify the test-ads
+    // fallback): duplicate a config and remove its toolArgs.
+    //
+    // For more attributes: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "kpopchat",
+            "request": "launch",
+            "type": "dart",
+            "toolArgs": ["--dart-define-from-file=.env.json"]
+        },
+        {
+            "name": "kpopchat (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile",
+            "toolArgs": ["--dart-define-from-file=.env.json"]
+        },
+        {
+            "name": "kpopchat (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "toolArgs": ["--dart-define-from-file=.env.json"]
+        }
+    ]
+}

@@ -69,4 +69,6 @@ app.*.map.json
 /lib/data/repository/data_filter_repo.dart
 /lib/admin_controls/
 
-.vscode/
+# VS Code — track launch.json (carries the --dart-define-from-file=.env.json
+# flag every dev needs) but not the auto-generated settings.json.
+.vscode/settings.json
